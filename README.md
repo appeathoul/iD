@@ -1,3 +1,11 @@
+# RoadMap
+* 完成多源国产组件数据的集成
+* 完成复杂权限集成
+* 完成空间权限集成
+* 完成ARCGIS、GOOGLE MAP、SUPERMAP格式数据导入导出
+* 数据同步通道
+* 自动化部署
+
 # iD - friendly JavaScript editor for [OpenStreetMap](https://www.openstreetmap.org/)
 
 [![Build Status](https://travis-ci.org/openstreetmap/iD.svg?branch=master)](https://travis-ci.org/openstreetmap/iD)
@@ -69,8 +77,8 @@ If you want to add in the full history later on, perhaps to run `git blame` or `
 1. `cd` into the newly cloned project folder
 2. Run `npm install`
 3. Run `npm run all`
-3. Run `npm start`
-4. Open `http://localhost:8080/` in a web browser
+4. Run `npm start`
+5. Open `http://localhost:8080/` in a web browser
 
 For guidance on building a packaged version, running tests, and contributing to
 development, see [CONTRIBUTING.md](CONTRIBUTING.md).
