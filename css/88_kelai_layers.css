@@ -1,0 +1,100 @@
+.layers-container-title-content {
+  text-align: center;
+  height: 43px;
+  line-height: 43px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.layers-items-container .layers-item {
+  position: relative;
+  margin: 7px;
+  height: 44px;
+  line-height: 44px;
+  background-color: #f6f6f6;
+  border: solid 1px #e8e8e8;
+  cursor: pointer;
+  transition-duration: 0.4s;
+  transition-property: all;
+  user-select: none;
+}
+
+.layers-items-container .layers-item:hover {
+  background-color: #c7d2e1;
+  border: solid 1px #476585;
+}
+
+.layers-items-container .layers-item:hover .layers-item-type {
+  border-right: solid 1px #476585;
+}
+
+.layers-items-container .layers-item-type {
+  position: relative;
+  transition-duration: 0.4s;
+  transition-property: all;
+  position: relative;
+  margin: 0px;
+  height: 100%;
+  width: 40px;
+  display: inline-block;
+  vertical-align: top;
+  background-color: white;
+  font-size: 0px;
+  overflow: hidden;
+  border-right: solid 1px #e8e8e8;
+}
+
+.layers-items-container .layers-item .layer-icon {
+  margin-left: 8px;
+}
+
+.layers-items-container .layers-item-type .layers-item-type-box {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  flex-flow: row nowrap;
+  align-items: center;
+  white-space: nowrap;
+  height: 30px;
+  width: 30px;
+  background-color: #f4f7fb;
+  position: relative;
+  left: 50%;
+  top: 50%;
+  margin-top: -15px;
+  margin-left: -15px;
+}
+
+.layers-items-container .layers-item-type-icon {
+  display: inline-block;
+}
+
+.layers-items-container .layers-item-lock-icon {
+  position: absolute;
+  right: 10px;
+  height: 100%;
+  line-height: 44px;
+  top: 0px;
+}
+.sidebar-header-pane {
+  position: relative;
+  height: 44px;
+  background-color: #c7d2e1;
+  margin: 0 auto;
+  /* position: absolute; */
+  line-height: 44px;
+}
+
+.sidebar-header-pane .icon-inline {
+  line-height: 44px;
+  font-size: 0px;
+  margin-right: 6px;
+  float: right;
+  user-select: none;
+}
+
+.sidebar-header-pane .icon-inline .icon {
+  vertical-align: middle;
+  height: 12px;
+  width: 12px;
+  cursor: pointer;
+}

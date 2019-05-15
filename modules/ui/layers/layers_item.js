@@ -1,0 +1,130 @@
+import {
+    select as d3_select,
+    event as d3_event,
+    selectAll as d3_selectAll
+} from 'd3-selection';
+import { dispatch as d3_dispatch } from 'd3-dispatch';
+import { utilRebind } from '../../util';
+import { utilFunctor } from '../../util/index';
+import { t, textDirection } from '../../util/locale';
+import { svgIcon } from '../../svg';
+import { tooltip } from '../../util/tooltip.kelai';
+import { uiTooltipHtml } from '../tooltipHtml';
+
+export function uiLayersItem(context) {
+    var dispatch = d3_dispatch(
+        // 选中事件
+        'select')
+        , wrap = null
+        , lockIcon = 'iD-icon-lock'
+        , layers = [{
+            id: 1,
+            // 显示内容
+            title: '省级行政区',
+            // 空间类型图标
+            icon: 'iD-icon-plane',
+            // 属性类型图标
+            typeIcon: 'iD-icon-district',
+            // 是否锁定
+            lock: true
+        }, {
+            id: 2,
+            title: '市级行政区',
+            icon: 'iD-icon-plane',
+            typeIcon: 'iD-icon-district'
+        }, {
+            id: 3,
+            title: '区县行政区',
+            icon: 'iD-icon-plane',
+            typeIcon: 'iD-icon-district'
+        }, {
+            id: 4,
+            title: '镇村行政区',
+            icon: 'iD-icon-plane',
+            typeIcon: 'iD-icon-district'
+        }, {
+            id: 5,
+            title: '街道',
+            icon: 'iD-icon-line-new',
+            typeIcon: 'iD-icon-floor'
+        }, {
+            id: 6,
+            title: '社区',
+            icon: 'iD-icon-line-new',
+            typeIcon: 'iD-icon-floor'
+        }, {
+            id: 7,
+            title: '网格',
+            icon: 'iD-icon-line-new',
+            typeIcon: 'iD-icon-floor'
+        }, {
+            id: 8,
+            title: '楼栋',
+            icon: 'iD-icon-spot',
+            typeIcon: 'iD-icon-floor'
+        }];
+    // 绘制
+    function redraw(selection) {
+        var itemsContainer = selection
+            .append('div')
+            .attr('class', 'layers-items-container');
+        var items = itemsContainer.selectAll('.layers-items-container')
+            .data(layers)
+            .enter()
+            .append('div')
+            .attr('class', 'layers-item')
+            .on('click.layers', function () {
+                alert('123');
+            });
+        // 添加属性类型图标
+        items
+            .append('div')
+            .attr('class', 'layers-item-type')
+            .append('div')
+            .attr('class', 'layers-item-type-box')
+            .call(function (selection) {
+                selection.each(function (d) {
+                    this.typeIconContent = d.typeIcon;
+                    svgIcon('#' + this.typeIconContent, 'inline')(d3_select(this));
+                });
+            });
+        // 添加空间型图标和文字
+        items
+            .append('div')
+            .attr('class', 'layers-item-type-icon')
+            .call(function (selection) {
+                selection.each(function (d) {
+                    this.iconContent = d.icon;
+                    svgIcon('#' + this.iconContent, 'inline layer-icon')(d3_select(this));
+                });
+            });
+        // 设置显示内容
+        items.append('span')
+            .text(function (d) { return d.title; });
+        var tooltipBehavior = tooltip()
+            .placement('right')
+            .triggerbyclick(true)
+            .html(true)
+            .title(uiTooltipHtml('锁定:这个图层无法编辑'));
+        // 设置锁定图标显示
+        items.append('div')
+            .attr('class', 'layers-item-lock-icon')
+            .call(function (selection) {
+                selection.each(function (d) {
+                    this.islockIconUse = d.lock;
+                    // 如果使用
+                    if (this.islockIconUse) {
+                        svgIcon('#' + lockIcon, 'inline layer-lock-icon')(d3_select(this));
+                        // d3_select(this).call(tooltipBehavior);
+                    }
+                });
+            });
+    }
+
+    function layersItem(selection) {
+        wrap = selection;
+        selection.call(redraw);
+    }
+
+    return utilRebind(layersItem, dispatch, 'on');
+}

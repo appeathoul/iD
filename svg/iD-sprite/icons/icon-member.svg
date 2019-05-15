@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.5 (67469) - http://www.bohemiancoding.com/sketch -->
+    <title>member_slice</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-12.000000, -12.000000)">
+            <g id="member" transform="translate(12.000000, 12.000000)">
+                <rect id="Selected-Copy" fill="#62B7ED" x="0" y="0" width="20" height="20"></rect>
+                <g transform="translate(6.000000, 6.000000)" fill="#FFFFFF">
+                    <path d="M8,6.80825874 L8,7.18744914 C8,7.63435211 7.64,8 7.2,8 L0.8,8 C0.36,8 0,7.63435211 0,7.18744914 L0,6.80825874 C0,5.81965519 1.13333333,5.22378456 2.2,4.74979656 C2.24,4.73625405 2.26666667,4.72271153 2.30666667,4.6956265 C2.38666667,4.65499896 2.48,4.65499896 2.56,4.70916902 C2.98666667,4.99356182 3.48,5.15607199 4,5.15607199 C4.52,5.15607199 5.01333333,4.99356182 5.44,4.72271153 C5.52,4.66854148 5.61333333,4.66854148 5.69333333,4.70916902 C5.73333333,4.72271153 5.76,4.73625405 5.8,4.76333908 C6.86666667,5.22378456 8,5.81965519 8,6.80825874" id="Fill-1"></path>
+                    <path d="M4,0 C5.10456376,0 6,0.895393939 6,2 C6,3.10460606 5.10456376,4 4,4 C2.89543624,4 2,3.10460606 2,2 C2,0.895393939 2.89543624,0 4,0" id="Fill-3"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

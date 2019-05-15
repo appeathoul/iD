@@ -31,6 +31,8 @@ import { uiPhotoviewer } from './photoviewer';
 import { uiRestore } from './restore';
 import { uiScale } from './scale';
 import { uiShortcuts } from './shortcuts';
+import { uiHeader } from './header';
+import { uiLayers } from './layers/layers';
 import { uiSidebar } from './sidebar';
 import { uiSpinner } from './spinner';
 import { uiSplash } from './splash';
@@ -47,7 +49,7 @@ export function uiInit(context) {
     var _needWidth = {};
 
 
-    function render(container) {
+    function render(container, header, layers) {
         container
             .attr('dir', textDirection);
 
@@ -56,6 +58,17 @@ export function uiInit(context) {
             .call(uiFullScreen(context));
 
         var map = context.map();
+
+        header
+            .append('div')
+            .attr('class', 'header-container_body')
+            .call(ui.header);
+
+        layers
+            .append('div')
+            .attr('class', 'layers-container_body')
+            .call(ui.layers);
+
 
         container
             .append('svg')
@@ -259,10 +272,10 @@ export function uiInit(context) {
 
 
         // Bind events
-        window.onbeforeunload = function() {
+        window.onbeforeunload = function () {
             return context.save();
         };
-        window.onunload = function() {
+        window.onunload = function () {
             context.history().unlock();
         };
 
@@ -275,7 +288,7 @@ export function uiInit(context) {
 
         var panPixels = 80;
         context.keybinding()
-            .on('⌫', function() { d3_event.preventDefault(); })
+            .on('⌫', function () { d3_event.preventDefault(); })
             .on([t('sidebar.key'), '`', '²'], ui.sidebar.toggle)   // #5663 - common QWERTY, AZERTY
             .on('←', pan([panPixels, 0]))
             .on('↑', pan([0, panPixels]))
@@ -304,11 +317,11 @@ export function uiInit(context) {
 
         if (osm && auth) {
             osm
-                .on('authLoading.ui', function() {
+                .on('authLoading.ui', function () {
                     context.container()
                         .call(auth);
                 })
-                .on('authDone.ui', function() {
+                .on('authDone.ui', function () {
                     auth.close();
                 });
         }
@@ -322,7 +335,7 @@ export function uiInit(context) {
 
 
         function pan(d) {
-            return function() {
+            return function () {
                 if (d3_select('.combobox').size()) return;
                 d3_event.preventDefault();
                 context.pan(d, 100);
@@ -335,13 +348,17 @@ export function uiInit(context) {
     }
 
 
-    function ui(node, callback) {
+    function ui(node, node1, node2, callback) {
         _initCallback = callback;
         var container = d3_select(node);
+        var header = d3_select(node1);
+        var layers = d3_select(node2);
+        context.header(header);
         context.container(container);
-        context.loadLocale(function(err) {
+        context.layer(layers);
+        context.loadLocale(function (err) {
             if (!err) {
-                render(container);
+                render(container, header, layers);
             }
             if (callback) {
                 callback(err);
@@ -350,10 +367,10 @@ export function uiInit(context) {
     }
 
 
-    ui.restart = function(arg) {
+    ui.restart = function (arg) {
         context.keybinding().clear();
         context.locale(arg);
-        context.loadLocale(function(err) {
+        context.loadLocale(function (err) {
             if (!err) {
                 context.container().selectAll('*').remove();
                 render(context.container());
@@ -362,12 +379,15 @@ export function uiInit(context) {
         });
     };
 
+    ui.header = uiHeader(context);
+
+    ui.layers = uiLayers(context);
 
     ui.sidebar = uiSidebar(context);
 
     ui.photoviewer = uiPhotoviewer(context);
 
-    ui.onResize = function(withPan) {
+    ui.onResize = function (withPan) {
         var map = context.map();
 
         // Recalc dimensions of map and sidebar.. (`true` = force recalc)
@@ -399,7 +419,7 @@ export function uiInit(context) {
 
 
     // Call checkOverflow when resizing or whenever the contents change.
-    ui.checkOverflow = function(selector, reset) {
+    ui.checkOverflow = function (selector, reset) {
         if (reset) {
             delete _needWidth[selector];
         }
@@ -420,7 +440,7 @@ export function uiInit(context) {
         }
     };
 
-    ui.togglePanes = function(showPane) {
+    ui.togglePanes = function (showPane) {
         var shownPanes = d3_selectAll('.map-pane.shown');
 
         var side = textDirection === 'ltr' ? 'right' : 'left';
@@ -460,7 +480,7 @@ export function uiInit(context) {
                 .transition()
                 .duration(200)
                 .style(side, '-500px')
-                .on('end', function() {
+                .on('end', function () {
                     d3_select(this).style('display', 'none');
                 });
         }

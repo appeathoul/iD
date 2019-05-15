@@ -42,7 +42,7 @@ export function coreContext() {
     }
 
     function forOwn(obj, fn) {
-        Object.keys(obj).forEach(function(k) { fn(obj[k], k, obj); });
+        Object.keys(obj).forEach(function (k) { fn(obj[k], k, obj); });
     }
 
     forOwn(tkeys, traverser);
@@ -55,17 +55,17 @@ export function coreContext() {
     // https://github.com/openstreetmap/iD/issues/772
     // http://mathiasbynens.be/notes/localstorage-pattern#comment-9
     var storage;
-    try { storage = localStorage; } catch (e) {}  // eslint-disable-line no-empty
-    storage = storage || (function() {
+    try { storage = localStorage; } catch (e) { }  // eslint-disable-line no-empty
+    storage = storage || (function () {
         var s = {};
         return {
-            getItem: function(k) { return s[k]; },
-            setItem: function(k, v) { s[k] = v; },
-            removeItem: function(k) { delete s[k]; }
+            getItem: function (k) { return s[k]; },
+            setItem: function (k, v) { s[k] = v; },
+            removeItem: function (k) { delete s[k]; }
         };
     })();
 
-    context.storage = function(k, v) {
+    context.storage = function (k, v) {
         try {
             if (arguments.length === 1) return storage.getItem(k);
             else if (v === null) storage.removeItem(k);
@@ -81,21 +81,21 @@ export function coreContext() {
 
     /* User interface and keybinding */
     var ui;
-    context.ui = function() { return ui; };
+    context.ui = function () { return ui; };
 
     var keybinding = utilKeybinding('context');
-    context.keybinding = function() { return keybinding; };
+    context.keybinding = function () { return keybinding; };
     d3_select(document).call(keybinding);
 
 
     /* Straight accessors. Avoid using these if you can. */
     var connection, history, validator;
-    context.connection = function() { return connection; };
-    context.history = function() { return history; };
-    context.validator = function() { return validator; };
+    context.connection = function () { return connection; };
+    context.history = function () { return history; };
+    context.validator = function () { return validator; };
 
     /* Connection */
-    context.preauth = function(options) {
+    context.preauth = function (options) {
         if (connection) {
             connection.switch(options);
         }
@@ -104,7 +104,7 @@ export function coreContext() {
 
 
     function afterLoad(cid, callback) {
-        return function(err, result) {
+        return function (err, result) {
             if (err) {
                 // 400 Bad Request, 401 Unauthorized, 403 Forbidden..
                 if (err.status === 400 || err.status === 401 || err.status === 403) {
@@ -134,50 +134,50 @@ export function coreContext() {
     }
 
 
-    context.loadTiles = function(projection, callback) {
+    context.loadTiles = function (projection, callback) {
         if (connection && context.editable()) {
             var cid = connection.getConnectionId();
-            utilCallWhenIdle(function() {
+            utilCallWhenIdle(function () {
                 connection.loadTiles(projection, afterLoad(cid, callback));
             })();
         }
     };
 
-    context.loadTileAtLoc = function(loc, callback) {
+    context.loadTileAtLoc = function (loc, callback) {
         if (connection && context.editable()) {
             var cid = connection.getConnectionId();
-            utilCallWhenIdle(function() {
+            utilCallWhenIdle(function () {
                 connection.loadTileAtLoc(loc, afterLoad(cid, callback));
             })();
         }
     };
 
-    context.loadEntity = function(entityID, callback) {
+    context.loadEntity = function (entityID, callback) {
         if (connection) {
             var cid = connection.getConnectionId();
             connection.loadEntity(entityID, afterLoad(cid, callback));
         }
     };
 
-    context.zoomToEntity = function(entityID, zoomTo) {
+    context.zoomToEntity = function (entityID, zoomTo) {
         if (zoomTo !== false) {
-            this.loadEntity(entityID, function(err, result) {
+            this.loadEntity(entityID, function (err, result) {
                 if (err) return;
-                var entity = result.data.find(function(e) { return e.id === entityID; });
+                var entity = result.data.find(function (e) { return e.id === entityID; });
                 if (entity) {
                     map.zoomTo(entity);
                 }
             });
         }
 
-        map.on('drawn.zoomToEntity', function() {
+        map.on('drawn.zoomToEntity', function () {
             if (!context.hasEntity(entityID)) return;
             map.on('drawn.zoomToEntity', null);
             context.on('enter.zoomToEntity', null);
             context.enter(modeSelect(context, [entityID]));
         });
 
-        context.on('enter.zoomToEntity', function() {
+        context.on('enter.zoomToEntity', function () {
             if (mode.id !== 'browse') {
                 map.on('drawn.zoomToEntity', null);
                 context.on('enter.zoomToEntity', null);
@@ -186,7 +186,7 @@ export function coreContext() {
     };
 
     var minEditableZoom = 16;
-    context.minEditableZoom = function(val) {
+    context.minEditableZoom = function (val) {
         if (!arguments.length) return minEditableZoom;
         minEditableZoom = val;
         if (connection) {
@@ -198,13 +198,13 @@ export function coreContext() {
 
     /* History */
     var inIntro = false;
-    context.inIntro = function(val) {
+    context.inIntro = function (val) {
         if (!arguments.length) return inIntro;
         inIntro = val;
         return context;
     };
 
-    context.save = function() {
+    context.save = function () {
         // no history save, no message onbeforeunload
         if (inIntro || d3_select('.modal').size()) return;
 
@@ -219,7 +219,7 @@ export function coreContext() {
             }
 
         } else {
-            canSave = context.selectedIDs().every(function(id) {
+            canSave = context.selectedIDs().every(function (id) {
                 var entity = context.hasEntity(id);
                 return entity && !entity.isDegenerate();
             });
@@ -235,26 +235,26 @@ export function coreContext() {
 
 
     /* Graph */
-    context.hasEntity = function(id) {
+    context.hasEntity = function (id) {
         return history.graph().hasEntity(id);
     };
-    context.entity = function(id) {
+    context.entity = function (id) {
         return history.graph().entity(id);
     };
-    context.childNodes = function(way) {
+    context.childNodes = function (way) {
         return history.graph().childNodes(way);
     };
-    context.geometry = function(id) {
+    context.geometry = function (id) {
         return context.entity(id).geometry(history.graph());
     };
 
 
     /* Modes */
     var mode;
-    context.mode = function() {
+    context.mode = function () {
         return mode;
     };
-    context.enter = function(newMode) {
+    context.enter = function (newMode) {
         if (mode) {
             mode.exit();
             dispatch.call('exit', this, mode);
@@ -265,7 +265,7 @@ export function coreContext() {
         dispatch.call('enter', this, mode);
     };
 
-    context.selectedIDs = function() {
+    context.selectedIDs = function () {
         if (mode && mode.selectedIDs) {
             return mode.selectedIDs();
         } else {
@@ -273,19 +273,19 @@ export function coreContext() {
         }
     };
 
-    context.activeID = function() {
+    context.activeID = function () {
         return mode && mode.activeID && mode.activeID();
     };
 
     var _selectedNoteID;
-    context.selectedNoteID = function(noteID) {
+    context.selectedNoteID = function (noteID) {
         if (!arguments.length) return _selectedNoteID;
         _selectedNoteID = noteID;
         return context;
     };
 
     var _selectedErrorID;
-    context.selectedErrorID = function(errorID) {
+    context.selectedErrorID = function (errorID) {
         if (!arguments.length) return _selectedErrorID;
         _selectedErrorID = errorID;
         return context;
@@ -293,18 +293,18 @@ export function coreContext() {
 
 
     /* Behaviors */
-    context.install = function(behavior) {
+    context.install = function (behavior) {
         context.surface().call(behavior);
     };
-    context.uninstall = function(behavior) {
+    context.uninstall = function (behavior) {
         context.surface().call(behavior.off);
     };
 
 
     /* Copy/Paste */
     var copyIDs = [], copyGraph;
-    context.copyGraph = function() { return copyGraph; };
-    context.copyIDs = function(val) {
+    context.copyGraph = function () { return copyGraph; };
+    context.copyIDs = function (val) {
         if (!arguments.length) return copyIDs;
         copyIDs = val;
         copyGraph = history.graph();
@@ -314,13 +314,13 @@ export function coreContext() {
 
     /* Background */
     var background;
-    context.background = function() { return background; };
+    context.background = function () { return background; };
 
 
     /* Features */
     var features;
-    context.features = function() { return features; };
-    context.hasHiddenConnections = function(id) {
+    context.features = function () { return features; };
+    context.hasHiddenConnections = function (id) {
         var graph = history.graph();
         var entity = graph.entity(id);
         return features.hasHiddenConnections(entity, graph);
@@ -329,21 +329,21 @@ export function coreContext() {
 
     /* Photos */
     var photos;
-    context.photos = function() { return photos; };
+    context.photos = function () { return photos; };
 
 
     /* Presets */
     var presets;
-    context.presets = function() { return presets; };
+    context.presets = function () { return presets; };
 
 
     /* Map */
     var map;
-    context.map = function() { return map; };
-    context.layers = function() { return map.layers; };
-    context.surface = function() { return map.surface; };
-    context.editable = function() { return map.editable(); };
-    context.surfaceRect = function() {
+    context.map = function () { return map; };
+    context.layers = function () { return map.layers; };
+    context.surface = function () { return map.surface; };
+    context.editable = function () { return map.editable(); };
+    context.surfaceRect = function () {
         return map.surface.node().getBoundingClientRect();
     };
 
@@ -359,30 +359,47 @@ export function coreContext() {
         target: false,      // touch targets
         downloaded: false   // downloaded data from osm
     };
-    context.debugFlags = function() {
+    context.debugFlags = function () {
         return debugFlags;
     };
-    context.setDebug = function(flag, val) {
+    context.setDebug = function (flag, val) {
         if (arguments.length === 1) val = true;
         debugFlags[flag] = val;
         dispatch.call('change');
         return context;
     };
-    context.getDebug = function(flag) {
+    context.getDebug = function (flag) {
         return flag && debugFlags[flag];
     };
 
+    /* Header */
+    var header = d3_select(document.body);
+    context.header = function (_) {
+        if (!arguments.length) return header;
+        header = _;
+        header.classed('id-header-container', true);
+        return context;
+    };
+
+    /* Layers */
+    var layer = d3_select(document.body);
+    context.layer = function (_) {
+        if (!arguments.length) return header;
+        layer = _;
+        layer.classed('id-layers-container', true);
+        return context;
+    };
 
     /* Container */
     var container = d3_select(document.body);
-    context.container = function(val) {
+    context.container = function (val) {
         if (!arguments.length) return container;
         container = val;
         container.classed('id-container', true);
         return context;
     };
     var embed;
-    context.embed = function(val) {
+    context.embed = function (val) {
         if (!arguments.length) return embed;
         embed = val;
         return context;
@@ -391,25 +408,25 @@ export function coreContext() {
 
     /* Assets */
     var assetPath = '';
-    context.assetPath = function(val) {
+    context.assetPath = function (val) {
         if (!arguments.length) return assetPath;
         assetPath = val;
         return context;
     };
 
     var assetMap = {};
-    context.assetMap = function(val) {
+    context.assetMap = function (val) {
         if (!arguments.length) return assetMap;
         assetMap = val;
         return context;
     };
 
-    context.asset = function(val) {
+    context.asset = function (val) {
         var filename = assetPath + val;
         return assetMap[filename] || filename;
     };
 
-    context.imagePath = function(val) {
+    context.imagePath = function (val) {
         return context.asset('img/' + val);
     };
 
@@ -419,24 +436,24 @@ export function coreContext() {
     // It won't become the `currentLocale` until after loadLocale() is called.
     var locale, localePath;
 
-    context.locale = function(loc, path) {
+    context.locale = function (loc, path) {
         if (!arguments.length) return currentLocale;
         locale = loc;
         localePath = path;
         return context;
     };
 
-    context.loadLocale = function(callback) {
+    context.loadLocale = function (callback) {
         if (locale && locale !== 'en' && dataLocales.hasOwnProperty(locale)) {
             localePath = localePath || context.asset('locales/' + locale + '.json');
             d3_json(localePath)
-                .then(function(result) {
+                .then(function (result) {
                     addTranslation(locale, result[locale]);
                     setLocale(locale);
                     utilDetect(true);
                     if (callback) callback();
                 })
-                .catch(function(err) {
+                .catch(function (err) {
                     if (callback) callback(err.message);
                 });
         } else {
@@ -452,9 +469,9 @@ export function coreContext() {
 
 
     /* reset (aka flush) */
-    context.reset = context.flush = function() {
+    context.reset = context.flush = function () {
         context.debouncedSave.cancel();
-        Object.values(services).forEach(function(service) {
+        Object.values(services).forEach(function (service) {
             if (service && typeof service.reset === 'function') {
                 service.reset(context);
             }
@@ -491,7 +508,7 @@ export function coreContext() {
     // and history changes can happen frequently (e.g. when dragging).
     context.debouncedSave = _debounce(context.save, 350);
     function withDebouncedSave(fn) {
-        return function() {
+        return function () {
             var result = fn.apply(history, arguments);
             context.debouncedSave();
             return result;
@@ -516,13 +533,13 @@ export function coreContext() {
     if (services.maprules && utilStringQs(window.location.hash).maprules) {
         var maprules = utilStringQs(window.location.hash).maprules;
         d3_json(maprules)
-            .then(function(mapcss) {
+            .then(function (mapcss) {
                 services.maprules.init();
-                mapcss.forEach(function(mapcssSelector) {
+                mapcss.forEach(function (mapcssSelector) {
                     return services.maprules.addRule(mapcssSelector);
                 });
             })
-            .catch(function() {
+            .catch(function () {
                 /* ignore */
             });
     }
@@ -537,7 +554,7 @@ export function coreContext() {
     context.zoomOutFurther = map.zoomOutFurther;
     context.redrawEnable = map.redrawEnable;
 
-    Object.values(services).forEach(function(service) {
+    Object.values(services).forEach(function (service) {
         if (service && typeof service.init === 'function') {
             service.init(context);
         }
@@ -550,8 +567,8 @@ export function coreContext() {
 
     if (utilStringQs(window.location.hash).presets) {
         var external = utilStringQs(window.location.hash).presets;
-        presets.fromExternal(external, function(externalPresets) {
-            context.presets = function() { return externalPresets; }; // default + external presets...
+        presets.fromExternal(external, function (externalPresets) {
+            context.presets = function () { return externalPresets; }; // default + external presets...
             osmSetAreaKeys(presets.areaKeys());
         });
     } else {

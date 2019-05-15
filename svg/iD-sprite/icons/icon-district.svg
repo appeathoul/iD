@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.5 (67469) - http://www.bohemiancoding.com/sketch -->
+    <title>district_slice</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-5.000000, -5.000000)" fill="#23374D">
+            <g id="district" transform="translate(7.000000, 7.000000)">
+                <path d="M14.7587068,1.23337347 L14.7587068,14.7567269 L1.2353534,14.7567269 L1.2353534,1.23337347 L14.7587068,1.23337347 Z M15.9881026,0.00397770346 L0.00593979933,0.00397770346 L0.00593979933,15.9861405 L15.9881026,15.9861405 L15.9881026,0.00397770346 Z" id="形状" fill-rule="nonzero"></path>
+                <polygon id="路径" points="3.69412709 3.69218283 9.84110591 3.69218283 9.84110591 9.83916165 3.69412709 9.83916165"></polygon>
+                <polygon id="路径" points="6.15293645 1.2333913 7.38233222 1.2333913 7.38233222 14.7567447 6.15293645 14.7567447"></polygon>
+                <polygon id="路径" points="1.23533556 6.15097436 14.7587068 6.15097436 14.7587068 7.38037012 1.23533556 7.38037012"></polygon>
+                <polygon id="路径" points="3.69412709 3.69218283 9.84110591 3.69218283 9.84110591 9.83916165 3.69412709 9.83916165"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

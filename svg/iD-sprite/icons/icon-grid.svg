@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.5 (67469) - http://www.bohemiancoding.com/sketch -->
+    <title>grid_slice</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-5.000000, -5.000000)" fill="#23374D">
+            <g id="grid" transform="translate(8.000000, 8.000000)">
+                <polygon id="路径" points="0.00248491054 2.54703586 13.9975151 2.54703586 13.9975151 3.81931133 0.00248491054 3.81931133"></polygon>
+                <polygon id="路径" points="0.638622658 8.27227547 13.3613774 8.27227547 13.3613774 9.54455095 0.638622658 9.54455095"></polygon>
+                <polygon id="路径" points="3.81931133 0.638622658 5.0915868 0.638622658 5.0915868 10.8168264 3.81931133 10.8168264"></polygon>
+                <polygon id="路径" points="9.54455095 0.00248491054 10.8168264 0.00248491054 10.8168264 13.9975151 9.54455095 13.9975151"></polygon>
+                <polygon id="路径" points="4.45544905 3.18317358 10.1806887 3.18317358 10.1806887 8.9084132 4.45544905 8.9084132"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>
