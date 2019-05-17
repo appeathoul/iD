@@ -364,16 +364,12 @@ export default {
     },
 
 
-<<<<<<< HEAD
-    reset: function () {
-=======
     reset: function() {
         Array.from(_deferred).forEach(function(handle) {
             window.cancelIdleCallback(handle);
             _deferred.delete(handle);
         });
 
->>>>>>> upstream/master
         _connectionID++;
         _userChangesets = undefined;
         _userDetails = undefined;
