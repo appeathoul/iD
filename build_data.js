@@ -10,8 +10,7 @@ const YAML = require('js-yaml');
 
 const fieldSchema = require('./data/presets/schema/field.json');
 const presetSchema = require('./data/presets/schema/preset.json');
-const suggestionBrands = require('name-suggestion-index').brands.brands;
-const nameSuggestionsWikidata = require('name-suggestion-index').wikidata.wikidata;
+const nsi = require('name-suggestion-index');
 const deprecated = require('./data/deprecated.json').dataDeprecated;
 
 // fontawesome icons
@@ -206,36 +205,42 @@ function generateFields(tstrings, faIcons, tnpIcons) {
 
 
 function suggestionsToPresets(presets) {
+    const brands = nsi.brands.brands;
+    const wikidata = nsi.wikidata.wikidata;
 
-    Object.keys(suggestionBrands).forEach(k => {
-        const suggestion = suggestionBrands[k];
+    Object.keys(brands).forEach(kvnd => {
+        const suggestion = brands[kvnd];
         const qid = suggestion.tags['brand:wikidata'];
         if (!qid || !/^Q\d+$/.test(qid)) return;   // wikidata tag missing or looks wrong..
 
-        const parts = k.split('|', 2);
-        const tag = parts[0].split('/', 2);
-        const key = tag[0];
-        const value = tag[1];
+        const parts = kvnd.split('|', 2);
+        const kv = parts[0];
         const name = parts[1].replace('~', ' ');
 
         let presetID, preset;
 
-        // sometimes we can find a more specific preset then key/value..
+        // sometimes we can choose a more specific preset then key/value..
         if (suggestion.tags.cuisine) {
-            presetID = key + '/' + value + '/' + suggestion.tags.cuisine;
-            preset = presets[presetID];
+            // cuisine can contain multiple values, so try them all in order
+            let cuisines = suggestion.tags.cuisine.split(';');
+            for (let i = 0; i < cuisines.length; i++) {
+                presetID = kv + '/' + cuisines[i].trim();
+                preset = presets[presetID];
+                if (preset) break;  // we matched one
+            }
+
         } else if (suggestion.tags.vending) {
             if (suggestion.tags.vending === 'parcel_pickup;parcel_mail_in') {
-                presetID = key + '/' + value + '/parcel_pickup_dropoff';
+                presetID = kv + '/parcel_pickup_dropoff';
             } else {
-                presetID = key + '/' + value + '/' + suggestion.tags.vending;
+                presetID = kv + '/' + suggestion.tags.vending;
             }
             preset = presets[presetID];
         }
 
         // fallback to key/value
         if (!preset) {
-            presetID = key + '/' + value;
+            presetID = kv;
             preset = presets[presetID];
         }
 
@@ -249,11 +254,17 @@ function suggestionsToPresets(presets) {
         let suggestionID = presetID + '/' + name;
 
         let logoURL;
-
-        let logoURLs = nameSuggestionsWikidata[qid] && nameSuggestionsWikidata[qid].logos;
+        let logoURLs = wikidata[qid] && wikidata[qid].logos;
         if (logoURLs) {
-            if (logoURLs.facebook) {
+            // Prefer a wiki commons logo in svg?.. #6361
+            // Currently commmented out, because these logos tend to not be square
+            // if (logoURLs.wikidata && /\.svg&width/i.test(logoURLs.wikidata)) {
+            //     logoURL = logoURLs.wikidata;
+
+            // Next, a Facebook profile picture (but not for a brand likely to have an age restriction)
+            if (logoURLs.facebook && !/^shop\/(alcohol|erotic|tobacco)$/.test(kv)) {
                 logoURL = logoURLs.facebook.replace('?type=square', '?type=large');
+            // Finally, Twitter profile picture or a non-svg wiki commons logo..
             } else {
                 logoURL = logoURLs.twitter || logoURLs.wikidata;
             }
@@ -268,6 +279,7 @@ function suggestionsToPresets(presets) {
             addTags: suggestion.tags,
             reference: preset.reference,
             countryCodes: suggestion.countryCodes,
+            terms: (suggestion.matchNames || []),
             matchScore: 2,
             suggestion: true
         };

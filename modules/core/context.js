@@ -6,24 +6,24 @@ import { select as d3_select } from 'd3-selection';
 
 import { t, currentLocale, addTranslation, setLocale } from '../util/locale';
 
-import { osmSetAreaKeys, osmSetPointTags, osmSetVertexTags } from '../osm/tags';
-
 import { coreHistory } from './history';
 import { coreValidator } from './validator';
 import { dataLocales, dataEn } from '../../data';
 import { geoRawMercator } from '../geo/raw_mercator';
 import { modeSelect } from '../modes/select';
+import { osmSetAreaKeys, osmSetPointTags, osmSetVertexTags } from '../osm/tags';
 import { presetIndex } from '../presets';
 import { rendererBackground, rendererFeatures, rendererMap, rendererPhotos } from '../renderer';
 import { services } from '../services';
 import { uiInit } from '../ui/init';
 import { utilDetect } from '../util/detect';
-import { utilCallWhenIdle, utilKeybinding, utilRebind, utilStringQs } from '../util';
+import { utilKeybinding, utilRebind, utilStringQs } from '../util';
 
 
 export function coreContext() {
     var dispatch = d3_dispatch('enter', 'exit', 'change');
     var context = utilRebind({}, dispatch, 'on');
+    var _deferred = new Set();
 
     context.version = '2.14.3';
 
@@ -135,22 +135,40 @@ export function coreContext() {
     }
 
 
+<<<<<<< HEAD
     context.loadTiles = function (projection, callback) {
         if (connection && context.editable()) {
             var cid = connection.getConnectionId();
             utilCallWhenIdle(function () {
+=======
+    context.loadTiles = function(projection, callback) {
+        var handle = window.requestIdleCallback(function() {
+            _deferred.delete(handle);
+            if (connection && context.editable()) {
+                var cid = connection.getConnectionId();
+>>>>>>> upstream/master
                 connection.loadTiles(projection, afterLoad(cid, callback));
-            })();
-        }
+            }
+        });
+        _deferred.add(handle);
     };
 
+<<<<<<< HEAD
     context.loadTileAtLoc = function (loc, callback) {
         if (connection && context.editable()) {
             var cid = connection.getConnectionId();
             utilCallWhenIdle(function () {
+=======
+    context.loadTileAtLoc = function(loc, callback) {
+        var handle = window.requestIdleCallback(function() {
+            _deferred.delete(handle);
+            if (connection && context.editable()) {
+                var cid = connection.getConnectionId();
+>>>>>>> upstream/master
                 connection.loadTileAtLoc(loc, afterLoad(cid, callback));
-            })();
-        }
+            }
+        });
+        _deferred.add(handle);
     };
 
     context.loadEntity = function (entityID, callback) {
@@ -472,7 +490,17 @@ export function coreContext() {
     /* reset (aka flush) */
     context.reset = context.flush = function () {
         context.debouncedSave.cancel();
+<<<<<<< HEAD
         Object.values(services).forEach(function (service) {
+=======
+
+        Array.from(_deferred).forEach(function(handle) {
+            window.cancelIdleCallback(handle);
+            _deferred.delete(handle);
+        });
+
+        Object.values(services).forEach(function(service) {
+>>>>>>> upstream/master
             if (service && typeof service.reset === 'function') {
                 service.reset(context);
             }

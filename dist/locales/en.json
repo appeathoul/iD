@@ -1790,7 +1790,7 @@
                 }
             },
             "unsquare_way": {
-                "title": "Unsquare Corners",
+                "title": "Unsquare Corners (up to {val}°)",
                 "message": "{feature} has unsquare corners",
                 "tip": "Find features with unsquare corners that can be drawn better",
                 "buildings": {
@@ -4701,6 +4701,10 @@
                 "amenity/fast_food/chicken": {
                     "name": "Chicken Fast Food",
                     "terms": "breakfast,canteen,dine,dining,dinner,drive-in,eat,grill,lunch,table"
+                },
+                "amenity/fast_food/donut": {
+                    "name": "Donut Fast Food",
+                    "terms": "breakfast,brunch,cafe,canteen,coffee,dine,diner,donut,doughnut,dining,eat,lunch,table"
                 },
                 "amenity/fast_food/fish_and_chips": {
                     "name": "Fish & Chips Fast Food",
@@ -9099,7 +9103,7 @@
                 "attribution": {
                     "text": "Terms & Feedback"
                 },
-                "description": "DigitalGlobe-Vivid is a mosaic with optimal aesthetics and currency for any area on the globe, 50cm resolution or better, and image currency <20 month average globally.",
+                "description": "DigitalGlobe-Vivid is a mosiac with optimal aesthetics and currency for any area on the globe, 50cm resolution or better, and image currency <20 month average globally.",
                 "name": "DigitalGlobe Vivid Imagery"
             },
             "EOXAT2018CLOUDLESS": {
