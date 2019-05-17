@@ -29,7 +29,7 @@ Object.assign(osmBakcground.prototype, {
             zoomExtent: _zoomExtent,
             endDate: attributes.endDate.value,
             startDate: attributes.startDate.value,
-            default: attributes.default.value === 'true' ? 'true' : 'false',
+            default: attributes.default.value === 'true' ? true : false,
             icon: attributes.icon.value,
             overlay: attributes.overlay.value === 'false' ? '' : true,
             terms_url: attributes.terms_url.value,
