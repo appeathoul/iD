@@ -89,8 +89,9 @@ export function coreContext() {
 
 
     /* Straight accessors. Avoid using these if you can. */
-    var connection, history, validator;
+    var connection, connectionKelai, history, validator;
     context.connection = function () { return connection; };
+    context.connectionKelai = function () { return connectionKelai; };
     context.history = function () { return history; };
     context.validator = function () { return validator; };
 
@@ -525,6 +526,7 @@ export function coreContext() {
     ui = uiInit(context);
 
     connection = services.osm;
+    connectionKelai = services.osmKelai;
     background = rendererBackground(context);
     features = rendererFeatures(context);
     photos = rendererPhotos(context);

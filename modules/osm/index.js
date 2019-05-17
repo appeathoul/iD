@@ -5,6 +5,7 @@ export { osmNote } from './note';
 export { osmRelation } from './relation';
 export { osmWay } from './way';
 export { qaError } from './qa_error';
+export { osmBakcground } from './background';
 
 export {
     osmIntersection,

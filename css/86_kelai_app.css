@@ -39,15 +39,77 @@
   color: #23374d;
 }
 
+#bar {
+  background: transparent;
+}
+
 #sidebar {
   border-top: 1px solid #e8e8e8;
   background-color: #f4f7fb;
 }
 
-/** 设置不显示 */
-#bar {
+#bar .toolbar-item.old-modes {
   display: none;
 }
+#bar .toolbar-item.undo-redo {
+  display: none;
+}
+#bar .toolbar-item.save {
+  display: none;
+}
+
+.map-toolbox {
+  position: absolute;
+  right: 50px;
+  top: 20px;
+  z-index: 10;
+}
+
+.map-toolbox #toolbox-wrapper {
+  position: relative;
+  height: 551px;
+  background-color: white;
+  box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.16);
+}
+
+.map-toolbox #toolbox-wrapper .toolbox-header {
+  background-color: #c7d2e1;
+}
+
+.map-toolbox #toolbox-wrapper .toolbox-title {
+  margin-left: 14px;
+  float: left;
+  height: 40px;
+  line-height: 40px;
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  letter-spacing: 0px;
+  color: #23374d;
+}
+
+.map-toolbox #toolbox-wrapper .toolbox-close {
+  line-height: 40px;
+  float: right;
+  margin-right: 10px;
+}
+
+/*清除浮动代码*/
+.clearfloat:after {
+  display: block;
+  clear: both;
+  content: "";
+  visibility: hidden;
+  height: 0;
+}
+.clearfloat {
+  zoom: 1;
+}
+
+/** 设置不显示 */
+/* #bar {
+  display: none;
+} */
 #info-block {
   display: none;
 }

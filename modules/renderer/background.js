@@ -11,11 +11,13 @@ import { rendererTileLayer } from './tile_layer';
 import { utilQsString, utilStringQs } from '../util';
 import { utilDetect } from '../util/detect';
 import { utilRebind } from '../util/rebind';
+import co from 'co';
 
 
 export function rendererBackground(context) {
-    var dispatch = d3_dispatch('change');
+    var dispatch = d3_dispatch('change' , 'onloaded');
     var detected = utilDetect();
+    var osmKelai = context.connectionKelai();
     var baseLayer = rendererTileLayer(context).projection(context.projection);
     var _isValid = true;
     var _overlayLayers = [];
@@ -24,6 +26,7 @@ export function rendererBackground(context) {
     var _contrast = 1;
     var _saturation = 1;
     var _sharpness = 1;
+    var imageryFromServer = null;
 
 
     function background(selection) {
@@ -226,6 +229,22 @@ export function rendererBackground(context) {
         });
     };
 
+    background.loadimageryFromServer = function () {
+        if (!osmKelai.authenticated()) {
+            osmKelai.authenticate(function (err) {
+                if (err) {
+                    // cancel();   // quit save mode..
+                } else {
+                    background.loadimageryFromServer();  // continue where we left off..
+                }
+            });
+            return;
+        }
+        if (imageryFromServer) {
+            return imageryFromServer;
+        }
+        return osmKelai.toPromise(osmKelai.loadBackground);
+    };
 
     background.dimensions = function(d) {
         if (!d) return;
@@ -370,7 +389,8 @@ export function rendererBackground(context) {
     };
 
 
-    background.init = function() {
+    background.init = function () {
+        co(function* () {
         function parseMap(qmap) {
             if (!qmap) return false;
             var args = qmap.split('/').map(Number);
@@ -386,17 +406,28 @@ export function rendererBackground(context) {
 
 
         data.imagery = data.imagery || [];
+        // request data from osm server
+        var ImageryServer = yield background.loadimageryFromServer();
+        imageryFromServer = ImageryServer;
+        if (imageryFromServer) {
+            data.imagery.length = 0;
+            let backgroundServer = ImageryServer.backgrounds[0].getBackground();
+            for (var i = 0; i < backgroundServer.length; i++) {
+                data.imagery.push(backgroundServer[i]);
+            }
+        }
+
         data.imagery.features = {};
 
         // build efficient index and querying for data.imagery
-        var features = data.imagery.map(function(source) {
+        var features = data.imagery.map(function (source) {
             if (!source.polygon) return null;
 
             // Add an extra array nest to each element in `source.polygon`
             // so the rings are not treated as a bunch of holes:
             // what we have: [ [[outer],[hole],[hole]] ]
             // what we want: [ [[outer]],[[outer]],[[outer]] ]
-            var rings = source.polygon.map(function(ring) { return [ring]; });
+            var rings = source.polygon.map(function (ring) { return [ring]; });
 
             var feature = {
                 type: 'Feature',
@@ -416,7 +447,7 @@ export function rendererBackground(context) {
 
 
         // Add all the available imagery sources
-        _backgroundSources = data.imagery.map(function(source) {
+        _backgroundSources = data.imagery.map(function (source) {
             if (source.type === 'bing') {
                 return rendererBackgroundSource.Bing(source, dispatch);
             } else if (/^EsriWorldImagery/.test(source.id)) {
@@ -439,7 +470,7 @@ export function rendererBackground(context) {
 
         // Decide which background layer to display
         if (!requested && extent) {
-            best = this.sources(extent).find(function(s) { return s.best(); });
+                best = this.sources(extent).find(function (s) { return s.best(); });
         }
         if (requested && requested.indexOf('custom:') === 0) {
             template = requested.replace(/^custom:/, '');
@@ -456,7 +487,7 @@ export function rendererBackground(context) {
             );
         }
 
-        var locator = _backgroundSources.find(function(d) {
+        var locator = _backgroundSources.find(function (d) {
             return d.overlay && d.default;
         });
 
@@ -480,7 +511,7 @@ export function rendererBackground(context) {
         }
 
         if (q.offset) {
-            var offset = q.offset.replace(/;/g, ',').split(',').map(function(n) {
+                var offset = q.offset.replace(/;/g, ',').split(',').map(function (n) {
                 return !isNaN(n) && n;
             });
 
@@ -488,6 +519,8 @@ export function rendererBackground(context) {
                 background.offset(geoMetersToOffset(offset));
             }
         }
+        dispatch.call('onloaded');
+        });
     };
 
 

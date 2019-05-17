@@ -105,7 +105,7 @@ export function rendererTileLayer(context) {
         if (_source.validZoom(_zoom)) {
             tiler.skipNullIsland(!!_source.overlay);
 
-            tiler().forEach(function(d) {
+            tiler().forEach(function (d) {
                 addSource(d);
                 if (d[3] === '') return;
                 if (typeof d[3] !== 'string') return; // Workaround for #2295
@@ -115,7 +115,7 @@ export function rendererTileLayer(context) {
                 }
             });
 
-            requests = uniqueBy(requests, 3).filter(function(r) {
+            requests = uniqueBy(requests, 3).filter(function (r) {
                 // don't re-request tiles which have failed in the past
                 return _cache[r[3]] !== false;
             });
@@ -169,7 +169,7 @@ export function rendererTileLayer(context) {
         var minDist = Math.max(dims[0], dims[1]);
         var nearCenter;
 
-        requests.forEach(function(d) {
+        requests.forEach(function (d) {
             var c = tileCenter(d);
             var dist = geoVecLength(c, mapCenter);
             if (dist < minDist) {
@@ -180,15 +180,15 @@ export function rendererTileLayer(context) {
 
 
         var image = selection.selectAll('img')
-            .data(requests, function(d) { return d[3]; });
+            .data(requests, function (d) { return d[3]; });
 
         image.exit()
             .style(transformProp, imageTransform)
             .classed('tile-removing', true)
             .classed('tile-center', false)
-            .each(function() {
+            .each(function () {
                 var tile = d3_select(this);
-                window.setTimeout(function() {
+                window.setTimeout(function () {
                     if (tile.classed('tile-removing')) {
                         tile.remove();
                     }
@@ -196,21 +196,21 @@ export function rendererTileLayer(context) {
             });
 
         image.enter()
-          .append('img')
+            .append('img')
             .attr('class', 'tile')
-            .attr('src', function(d) { return d[3]; })
+            .attr('src', function (d) { return d[3]; })
             .on('error', error)
             .on('load', load)
-          .merge(image)
+            .merge(image)
             .style(transformProp, imageTransform)
             .classed('tile-debug', showDebug)
             .classed('tile-removing', false)
-            .classed('tile-center', function(d) { return d === nearCenter; });
+            .classed('tile-center', function (d) { return d === nearCenter; });
 
 
 
         var debug = selection.selectAll('.tile-label-debug')
-            .data(showDebug ? requests : [], function(d) { return d[3]; });
+            .data(showDebug ? requests : [], function (d) { return d[3]; });
 
         debug.exit()
             .remove();
@@ -235,14 +235,14 @@ export function rendererTileLayer(context) {
 
             debug
                 .selectAll('.tile-label-debug-coord')
-                .text(function(d) { return d[2] + ' / ' + d[0] + ' / ' + d[1]; });
+                .text(function (d) { return d[2] + ' / ' + d[0] + ' / ' + d[1]; });
 
             debug
                 .selectAll('.tile-label-debug-vintage')
-                .each(function(d) {
+                .each(function (d) {
                     var span = d3_select(this);
                     var center = context.projection.invert(tileCenter(d));
-                    _source.getMetadata(center, d, function(err, result) {
+                    _source.getMetadata(center, d, function (err, result) {
                         span.text((result && result.vintage && result.vintage.range) ||
                             t('info_panels.background.vintage') + ': ' + t('info_panels.background.unknown')
                         );
@@ -253,21 +253,21 @@ export function rendererTileLayer(context) {
     }
 
 
-    background.projection = function(val) {
+    background.projection = function (val) {
         if (!arguments.length) return _projection;
         _projection = val;
         return background;
     };
 
 
-    background.dimensions = function(val) {
+    background.dimensions = function (val) {
         if (!arguments.length) return tiler.size();
         tiler.size(val);
         return background;
     };
 
 
-    background.source = function(val) {
+    background.source = function (val) {
         if (!arguments.length) return _source;
         _source = val;
         _tileSize = _source.tileSize;

@@ -5,6 +5,7 @@ import serviceMapRules from './maprules';
 import serviceNominatim from './nominatim';
 import serviceOpenstreetcam from './openstreetcam';
 import serviceOsm from './osm';
+import serviceOsmKelai from './osm.kelai';
 import serviceOsmWikibase from './osm_wikibase';
 import serviceStreetside from './streetside';
 import serviceTaginfo from './taginfo';
@@ -20,6 +21,7 @@ export var services = {
     mapillary: serviceMapillary,
     openstreetcam: serviceOpenstreetcam,
     osm: serviceOsm,
+    osmKelai: serviceOsmKelai,
     osmWikibase: serviceOsmWikibase,
     maprules: serviceMapRules,
     streetside: serviceStreetside,

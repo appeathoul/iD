@@ -33,6 +33,7 @@ import { uiScale } from './scale';
 import { uiShortcuts } from './shortcuts';
 import { uiHeader } from './header';
 import { uiLayers } from './layers/layers';
+import { uiToolbox } from './toolbox/toolbox';
 import { uiSidebar } from './sidebar';
 import { uiSpinner } from './spinner';
 import { uiSplash } from './splash';
@@ -98,6 +99,10 @@ export function uiInit(context) {
             .attr('dir', 'ltr')
             .call(map);
 
+        content.append('div')
+            .attr('class', 'map-toolbox')
+            .call(ui.toolbox);
+
 
         // Map controls
         var controls = content
@@ -113,12 +118,45 @@ export function uiInit(context) {
             .append('div')
             .attr('class', 'map-control geolocate-control')
             .call(uiGeolocate(context));
+        context.background().on('onloaded', function () {
+            var background = uiBackground(context);
+            controls
+                .append('div')
+                .attr('class', 'map-control background-control')
+                .call(background.renderToggleButton);
+                var overMap = content
+                .append('div')
+                .attr('class', 'over-map');
 
-        var background = uiBackground(context);
-        controls
-            .append('div')
-            .attr('class', 'map-control background-control')
-            .call(background.renderToggleButton);
+            // Add panes
+            // This should happen after map is initialized, as some require surface()
+            var panes = overMap
+                .append('div')
+                .attr('class', 'map-panes');
+
+            panes
+                .call(mapData.renderPane)
+                .call(issues.renderPane)
+                .call(help.renderPane)
+                .call(background.renderPane);
+
+            // Add absolutely-positioned elements that sit on top of the map
+            // This should happen after the map is ready (center/zoom)
+            overMap
+                .call(uiMapInMap(context))
+                .call(uiInfo(context))
+                .call(uiNotice(context));
+
+
+            overMap
+                .append('div')
+                .attr('id', 'photoviewer')
+                .classed('al', true)       // 'al'=left,  'ar'=right
+                .classed('hide', true)
+                .call(ui.photoviewer);
+        });
+
+
 
         var mapData = uiMapData(context);
         controls
@@ -239,36 +277,7 @@ export function uiInit(context) {
         }
 
 
-        var overMap = content
-            .append('div')
-            .attr('class', 'over-map');
 
-        // Add panes
-        // This should happen after map is initialized, as some require surface()
-        var panes = overMap
-            .append('div')
-            .attr('class', 'map-panes');
-
-        panes
-            .call(background.renderPane)
-            .call(mapData.renderPane)
-            .call(issues.renderPane)
-            .call(help.renderPane);
-
-        // Add absolutely-positioned elements that sit on top of the map
-        // This should happen after the map is ready (center/zoom)
-        overMap
-            .call(uiMapInMap(context))
-            .call(uiInfo(context))
-            .call(uiNotice(context));
-
-
-        overMap
-            .append('div')
-            .attr('id', 'photoviewer')
-            .classed('al', true)       // 'al'=left,  'ar'=right
-            .classed('hide', true)
-            .call(ui.photoviewer);
 
 
         // Bind events
@@ -382,6 +391,8 @@ export function uiInit(context) {
     ui.header = uiHeader(context);
 
     ui.layers = uiLayers(context);
+
+    ui.toolbox = uiToolbox(context);
 
     ui.sidebar = uiSidebar(context);
 
