@@ -13,7 +13,7 @@ Object.assign(osmBakcground.prototype, {
     type: 'background',
     backgrounds: [],
     initialize: function (backgrounds) {
-        let that = this;
+        var that = this;
         _forEach(backgrounds[0], function (value, index) {
             that.setBackground(value);
         });

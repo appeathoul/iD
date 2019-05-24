@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 const colors = require('colors/safe');
+const babel = require('rollup-plugin-babel');          //ES6转ES5插件;
 const commonjs = require('rollup-plugin-commonjs');
 const includePaths = require('rollup-plugin-includepaths');
 const json = require('rollup-plugin-json');
@@ -31,11 +32,15 @@ module.exports = function buildSrc() {
             .rollup({
                 input: './modules/id.js',
                 plugins: [
-                    includePaths( {
+                    includePaths({
                         paths: ['node_modules/d3/node_modules'],  // npm2 or windows
                         include: {
                             'martinez-polygon-clipping': 'node_modules/martinez-polygon-clipping/dist/martinez.umd.js'
                         }
+                    }),
+                    babel({
+                        babelrc: false,                        //不设置.babelrc文件;
+                        exclude: 'node_modules/**'            //排除node_modules文件夹;
                     }),
                     nodeResolve({
                         mainFields: ['module', 'main'],

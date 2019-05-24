@@ -207,7 +207,7 @@ export default {
     },
     /** 将function转换为promise */
     toPromise: function (fun, ...args) {
-        let that = this;
+        var that = this;
         return new Promise(function (resolve, reject) {
             fun.call(that, function (err, backgrounds) {
                 if (err) {
