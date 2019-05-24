@@ -12,15 +12,16 @@ export function osmBakcground() {
 Object.assign(osmBakcground.prototype, {
     type: 'background',
     backgrounds: [],
-    initialize(backgrounds) {
-        _forEach(backgrounds[0], (value, index) => {
-            this.setBackground(value);
+    initialize: function (backgrounds) {
+        let that = this;
+        _forEach(backgrounds[0], function (value, index) {
+            that.setBackground(value);
         });
     },
-    setBackground(_bac) {
-        let attributes = _bac.attributes;
-        let _zoomExtent = JSON.parse(attributes.zoomExtent.value);
-        let json = {
+    setBackground: function (_bac) {
+        var attributes = _bac.attributes;
+        var _zoomExtent = JSON.parse(attributes.zoomExtent.value);
+        var json = {
             id: attributes.id.value,
             name: attributes.name.value,
             type: attributes.type.value === 'wms' ? 'wms' : 'tms',
@@ -38,17 +39,17 @@ Object.assign(osmBakcground.prototype, {
             polygon: attributes.polygon.value
         };
         // 去除空字段
-        _map(json, (value, index) => {
+        _map(json, function (value, index) {
             if (!value) {
                 delete json[index];
             }
         });
         this.backgrounds.push(json);
     },
-    getBackground() {
+    getBackground: function () {
         return this.backgrounds;
     },
-    hasBackground() {
+    hasBackground: function () {
         if (this.backgrounds.length > 0) {
             return true;
         } else {

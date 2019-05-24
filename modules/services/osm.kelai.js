@@ -11,10 +11,7 @@ import rbush from 'rbush';
 // 转换xml数据到json
 import { JXON } from '../util/jxon';
 import { osmBakcground } from '../osm';
-import {
-    utilArrayChunk, utilArrayGroupBy, utilArrayUniq, utilRebind,
-    utilIdleWorker, utilTiler, utilQsString
-} from '../util';
+import { utilArrayChunk, utilArrayGroupBy, utilArrayUniq, utilRebind, utilTiler, utilQsString } from '../util';
 import co from 'co';
 var tiler = utilTiler();
 var dispatch = d3_dispatch('authLoading', 'authDone');
@@ -29,6 +26,7 @@ var oauth = osmAuth({
     done: authDone
 });
 
+var _deferred = new Set();
 var _connectionID = 1;
 var _rateLimitError;
 
@@ -57,12 +55,18 @@ function parseXML(xml, callback, options) {
 
     var root = xml.childNodes[0];
     var children = root.childNodes;
-    utilIdleWorker(children, parseChild, done);
 
-
-    function done(results) {
+    var handle = window.requestIdleCallback(function () {
+        var results = [];
+        var result;
+        for (var i = 0; i < children.length; i++) {
+            result = parseChild(children[i]);
+            if (result) results.push(result);
+        }
         callback(null, results);
-    }
+    });
+
+    _deferred.add(handle);
 
     function parseChild(child) {
         var parser = parsers[child.nodeName];
@@ -202,7 +206,7 @@ export default {
         return this;
     },
     /** 将function转换为promise */
-    toPromise(fun, ...args) {
+    toPromise: function (fun, ...args) {
         let that = this;
         return new Promise(function (resolve, reject) {
             fun.call(that, function (err, backgrounds) {
