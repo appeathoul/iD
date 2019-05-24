@@ -120,7 +120,6 @@ export function rendererFeatures(context) {
 
     defineRule('buildings', function isBuilding(tags) {
         return (
-            !!tags['building:part'] ||
             (!!tags.building && tags.building !== 'no') ||
             tags.parking === 'multi-storey' ||
             tags.parking === 'sheds' ||
@@ -129,10 +128,21 @@ export function rendererFeatures(context) {
         );
     }, 250);
 
+    defineRule('building_parts', function isBuildingPart(tags) {
+        return tags['building:part'];
+    });
+
+    defineRule('indoor', function isIndoor(tags) {
+        return tags.indoor;
+    });
+
     defineRule('landuse', function isLanduse(tags, geometry) {
         return geometry === 'area' &&
             !_rules.buildings.filter(tags) &&
-            !_rules.water.filter(tags);
+            !_rules.building_parts.filter(tags) &&
+            !_rules.indoor.filter(tags) &&
+            !_rules.water.filter(tags) &&
+            !_rules.pistes.filter(tags);
     });
 
     defineRule('boundaries', function isBoundary(tags) {
@@ -173,6 +183,16 @@ export function rendererFeatures(context) {
             service_roads[tags.highway] ||
             paths[tags.highway]
         );
+    });
+
+    defineRule('pistes', function isPiste(tags) {
+        return tags['piste:type'];
+    });
+
+    defineRule('aerialways', function isPiste(tags) {
+        return tags.aerialway &&
+            tags.aerialway !== 'yes' &&
+            tags.aerialway !== 'station';
     });
 
     defineRule('power', function isPower(tags) {
@@ -254,12 +274,34 @@ export function rendererFeatures(context) {
         }
     };
 
+    features.enableAll = function() {
+        var didEnable = false;
+        for (var k in _rules) {
+            if (!_rules[k].enabled) {
+                didEnable = true;
+                _rules[k].enable();
+            }
+        }
+        if (didEnable) update();
+    };
+
 
     features.disable = function(k) {
         if (_rules[k] && _rules[k].enabled) {
             _rules[k].disable();
             update();
         }
+    };
+
+    features.disableAll = function() {
+        var didDisable = false;
+        for (var k in _rules) {
+            if (_rules[k].enabled) {
+                didDisable = true;
+                _rules[k].disable();
+            }
+        }
+        if (didDisable) update();
     };
 
 

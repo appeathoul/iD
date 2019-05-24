@@ -360,14 +360,6 @@
       "replace": {"barrier": "stile"}
     },
     {
-      "old": {"highway": "incline"},
-      "replace": {"highway": "road", "incline": "up"}
-    },
-    {
-      "old": {"highway": "incline_steep"},
-      "replace": {"highway": "road", "incline": "up"}
-    },
-    {
       "old": {"highway": "unsurfaced"},
       "replace": {"highway": "road", "surface": "unpaved"}
     },
@@ -456,12 +448,24 @@
       "replace": {"club": "*"}
     },
     {
+      "old": {"leisure": "ice_rink", "sport": "hockey"},
+      "replace": {"leisure": "ice_rink", "sport": "ice_hockey"}
+    },
+    {
+      "old": {"leisure": "ice_rink", "sport": "skating"},
+      "replace": {"leisure": "ice_rink", "sport": "ice_skating"}
+    },
+    {
       "old": {"leisure": "social_club"},
       "replace": {"club": "*"}
     },
     {
       "old": {"leisure": "video_arcade"},
       "replace": {"leisure": "amusement_arcade"}
+    },
+    {
+      "old": {"leisure": "recreation_ground"},
+      "replace": {"landuse": "recreation_ground"}
     },
     {
       "old": {"man_made": "cut_line"},
@@ -478,6 +482,18 @@
     {
       "old": {"man_made": "MDF"},
       "replace": {"telecom": "exchange"}
+    },
+    {
+      "old": {"man_made": "fuel_storage_tank"},
+      "replace": {"man_made": "storage_tank", "content": "fuel"}
+    },
+    {
+      "old": {"man_made": "oil_tank"},
+      "replace": {"man_made": "storage_tank", "content": "oil"}
+    },
+    {
+      "old": {"man_made": "wastewater_tank"},
+      "replace": {"man_made": "storage_tank", "content": "wastewater"}
     },
     {
       "old": {"man_made": "water_tank"},

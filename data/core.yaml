@@ -628,6 +628,12 @@ en:
     buildings:
       description: Buildings
       tooltip: "Buildings, Shelters, Garages, etc."
+    building_parts:
+      description: Building Parts
+      tooltip: "3D Building and Roof Components"
+    indoor:
+      description: Indoor Features
+      tooltip: "Rooms, Corridors, Stairwells, etc."
     landuse:
       description: Landuse Features
       tooltip: "Forests, Farmland, Parks, Residential, Commercial, etc."
@@ -640,6 +646,12 @@ en:
     rail:
       description: Rail Features
       tooltip: "Railways"
+    pistes:
+      description: Pistes
+      tooltip: "Ski Slopes, Sled Runs, Ice Skating Trails, etc."
+    aerialways:
+      description: Aerial Features
+      tooltip: "Chair Lifts, Gondolas, Zip Lines, etc."
     power:
       description: Power Features
       tooltip: "Power Lines, Power Plants, Substations, etc."
@@ -1320,13 +1332,18 @@ en:
       title: Almost Junctions
       message: "{feature} is very close but not connected to {feature2}"
       tip: "Find features that should possibly be connected to other nearby features"
+      self:
+        message: "{feature} ends very close to itself but does not reconnect"
       highway-highway:
         reference: Intersecting highways should share a junction vertex.
     close_nodes:
       title: "Very Close Points"
+      tip: "Find redundant and crowded points"
       message: "Two points in {way} are very close together"
-      tip: "Find redundant points in ways"
       reference: "Redundant points in a way should be merged or moved apart."
+      detached:
+        message: "{feature} is too close to {feature2}"
+        reference: "Separate points should not share a location."
     crossing_ways:
       title: Crossings Ways
       message: "{feature} crosses {feature2}"
@@ -1365,12 +1382,13 @@ en:
         reference: "Crossing indoor features should be connected or use different levels."
     disconnected_way:
       title: Disconnected Ways
-      tip: "Find unconnected highways and paths"
+      tip: "Find unroutable roads, paths, and ferry routes"
+      routable:
+        message:
+          multiple: "{count} routable features are connected only to each other."
+        reference: "All roads, paths, and ferry routes should connect to form a single routing network."
       highway:
         message: "{highway} is disconnected from other roads and paths"
-        message_new_road: "New {highway} is disconnected from existing road network"
-        reference: "Highways should connect to other highways or building entrances."
-        reference_new_road: "New roads should connect to existing road network or building entrances."
     fixme_tag:
       title: '"Fix Me" Requests'
       message: '{feature} has a "Fix Me" request'
@@ -1409,9 +1427,12 @@ en:
       reference: "Multipolygons should be tagged on their relation, not their outer way."
     outdated_tags:
       title: Outdated Tags
-      message: '{feature} has outdated tags'
+      message: "{feature} has outdated tags"
       tip: "Find features with deprecated tags that can be updated"
       reference: "Some tags change over time and should be updated."
+      incomplete:
+        message: "{feature} has incomplete tags"
+        reference: "Some features should have additional tags."
     private_data:
       title: Private Information
       tip: "Find features that may contain private information"

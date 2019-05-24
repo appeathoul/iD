@@ -1559,6 +1559,15 @@ button.preset-favorite-button.active .icon {
     padding: 5px 10px 5px 0;
 }
 
+.label-text .label-textannotation svg.icon {
+    margin: 0 8px;
+    color: #333;
+    opacity: 0.5;
+    width: 14px;
+    height: 14px;
+    vertical-align: text-top;
+}
+
 .field-label button {
     flex: 0 0 32px;
     border-left: 1px solid #ccc;
@@ -1579,11 +1588,13 @@ button.preset-favorite-button.active .icon {
 }
 
 .field-label .modified-icon,
-.field-label .remove-icon {
+.field-label .remove-icon,
+.field-label .remove-icon-multilingual {
     display: none;
 }
-.modified .field-label .modified-icon,
-.present .field-label .remove-icon {
+.modified:not(.locked) .field-label .modified-icon,
+.present:not(.locked) .field-label .remove-icon,
+.present:not(.locked) .field-label .remove-icon-multilingual {
     display: inline-block;
 }
 
@@ -1735,7 +1746,7 @@ button.preset-favorite-button.active .icon {
 }
 
 .form-field-input-multicombo ul.chiplist {
-    padding: 3px 10px 3px 10px;
+    padding: 5px 8px 5px 8px;
     background: #fff;
     display: block;
     border-radius: 0 0 4px 4px;
@@ -3381,8 +3392,9 @@ button.autofix.action.active {
 }
 
 .layer-list.issue-rules-list,
-.layer-list.issues-list {
-  margin-bottom: 0;
+.layer-list.issues-list,
+.layer-list.layer-feature-list {
+    margin-bottom: 0;
 }
 .section-footer {
   display: flex;
@@ -3404,6 +3416,15 @@ button.autofix.action.active {
 .issues-none .icon {
   color: #05ac10;
 }
+
+input.square-degrees-input {
+    padding: 2px;
+    height: unset;
+    text-align: center;
+    background: rgba(0,0,0,0);
+    color: currentColor;
+}
+
 
 /* Entity Issues List */
 .entity-issues .issue-container .issue {

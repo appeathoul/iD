@@ -55,6 +55,7 @@ module.exports = function buildData() {
         // Font Awesome icons used
         var faIcons = {
             'fas-i-cursor': {},
+            'fas-lock': {},
             'fas-long-arrow-alt-right': {},
             'fas-th-list': {}
         };
@@ -250,8 +251,13 @@ function suggestionsToPresets(presets) {
             return;
         }
 
-        let wikidataTag = { 'brand:wikidata': qid };
         let suggestionID = presetID + '/' + name;
+
+        let tags = { 'brand:wikidata': qid };
+        for (let k in preset.tags) {
+            // prioritize suggestion tags over preset tags (for `vending`,`cuisine`, etc)
+            tags[k] = suggestion.tags[k] || preset.tags[k];
+        }
 
         let logoURL;
         let logoURLs = wikidata[qid] && wikidata[qid].logos;
@@ -275,7 +281,7 @@ function suggestionsToPresets(presets) {
             icon: preset.icon,
             imageURL: logoURL,
             geometry: preset.geometry,
-            tags: Object.assign({}, preset.tags, wikidataTag),
+            tags: tags,
             addTags: suggestion.tags,
             reference: preset.reference,
             countryCodes: suggestion.countryCodes,

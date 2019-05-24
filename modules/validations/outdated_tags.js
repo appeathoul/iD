@@ -15,7 +15,7 @@ export function validationOutdatedTags() {
     // initialize name-suggestion-index matcher
     var nsiMatcher = matcher();
     nsiMatcher.buildMatchIndex(brands.brands);
-    var nsiKeys = ['amenity', 'leisure', 'shop', 'tourism'];
+    var nsiKeys = ['amenity', 'shop', 'tourism', 'leisure', 'office'];
 
 
     function oldTagIssues(entity, context) {
@@ -64,8 +64,11 @@ export function validationOutdatedTags() {
                 var match = nsiMatcher.matchKVN(k, newTags[k], newTags.name);
                 if (!match) continue;
 
+                // for now skip ambiguous matches (like Target~(USA) vs Target~(Australia))
+                if (match.d) continue;
+
                 var brand = brands.brands[match.kvnd];
-                if (brand) {
+                if (brand && brand.tags['brand:wikidata']) {
                     Object.assign(newTags, brand.tags);
                     break;
                 }
@@ -77,14 +80,13 @@ export function validationOutdatedTags() {
         var tagDiff = utilTagDiff(oldTags, newTags);
         if (!tagDiff.length) return [];
 
+        var prefix = subtype === 'incomplete_tags' ? 'incomplete.' : '';
+
         return [new validationIssue({
             type: type,
             subtype: subtype,
             severity: 'warning',
-            message: function() {
-                var entity = context.hasEntity(this.entityIds[0]);
-                return entity ? t('issues.outdated_tags.message', { feature: utilDisplayLabel(entity, context) }) : '';
-            },
+            message: showMessage,
             reference: showReference,
             entityIds: [entity.id],
             hash: JSON.stringify(tagDiff),
@@ -101,7 +103,29 @@ export function validationOutdatedTags() {
 
 
         function doUpgrade(graph) {
-            return actionChangeTags(entity.id, newTags)(graph);
+            var currEntity = context.hasEntity(entity.id);
+            if (!currEntity) return graph;
+
+            var newTags = Object.assign({}, currEntity.tags);  // shallow copy
+            tagDiff.forEach(function(diff) {
+                if (diff.type === '-') {
+                    delete newTags[diff.key];
+                } else if (diff.type === '+') {
+                    newTags[diff.key] = diff.newVal;
+                }
+            });
+
+            return actionChangeTags(currEntity.id, newTags)(graph);
+        }
+
+
+        function showMessage() {
+            var currEntity = context.hasEntity(entity.id);
+            if (!currEntity) return '';
+
+            return t('issues.outdated_tags.' + prefix + 'message',
+                { feature: utilDisplayLabel(currEntity, context) }
+            );
         }
 
 
@@ -113,7 +137,7 @@ export function validationOutdatedTags() {
             enter
                 .append('div')
                 .attr('class', 'issue-reference')
-                .text(t('issues.outdated_tags.reference'));
+                .text(t('issues.outdated_tags.' + prefix + 'reference'));
 
             enter
                 .append('strong')
@@ -136,8 +160,8 @@ export function validationOutdatedTags() {
         }
     }
 
-    function oldMultipolygonIssues(entity, context) {
 
+    function oldMultipolygonIssues(entity, context) {
         var graph = context.graph();
 
         var multipolygon, outerWay;
@@ -157,10 +181,7 @@ export function validationOutdatedTags() {
             type: type,
             subtype: 'old_multipolygon',
             severity: 'warning',
-            message: function() {
-                var entity = context.hasEntity(this.issue.entityIds[1]);
-                return entity ? t('issues.old_multipolygon.message', { multipolygon: utilDisplayLabel(entity, context) }) : '';
-            },
+            message: showMessage,
             reference: showReference,
             entityIds: [outerWay.id, multipolygon.id],
             fixes: [
@@ -176,9 +197,23 @@ export function validationOutdatedTags() {
 
 
         function doUpgrade(graph) {
-            multipolygon = multipolygon.mergeTags(outerWay.tags);
-            graph = graph.replace(multipolygon);
-            return actionChangeTags(outerWay.id, {})(graph);
+            var currMultipolygon = context.hasEntity(multipolygon.id);
+            var currOuterWay = context.hasEntity(outerWay.id);
+            if (!currMultipolygon || !currOuterWay) return graph;
+
+            currMultipolygon = currMultipolygon.mergeTags(currOuterWay.tags);
+            graph = graph.replace(currMultipolygon);
+            return actionChangeTags(currOuterWay.id, {})(graph);
+        }
+
+
+        function showMessage() {
+            var currMultipolygon = context.hasEntity(multipolygon.id);
+            if (!currMultipolygon) return '';
+
+            return t('issues.old_multipolygon.message',
+                { multipolygon: utilDisplayLabel(currMultipolygon, context) }
+            );
         }
 
 
