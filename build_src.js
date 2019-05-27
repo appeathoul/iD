@@ -38,10 +38,10 @@ module.exports = function buildSrc() {
                             'martinez-polygon-clipping': 'node_modules/martinez-polygon-clipping/dist/martinez.umd.js'
                         }
                     }),
-                    babel({
-                        babelrc: false,                        //不设置.babelrc文件;
-                        exclude: 'node_modules/**'            //排除node_modules文件夹;
-                    }),
+                    // babel({
+                    //     babelrc: false,                        //不设置.babelrc文件;
+                    //     exclude: 'node_modules/**'            //排除node_modules文件夹;
+                    // }),
                     nodeResolve({
                         mainFields: ['module', 'main'],
                         browser: false

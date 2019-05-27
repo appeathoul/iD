@@ -22,6 +22,8 @@ var oauth = osmAuth({
     url: urlroot,
     oauth_consumer_key: 'SWFGlfmQcEdOyOzG3STbO9I90gjMFLqkCX5MCOop',
     oauth_secret: 'w9745aYboKgQJKTOtqXs8WCEuLnk7EszeJHilqon',
+    singlepage: true,
+    landing: './land.html',
     loading: authLoading,
     done: authDone
 });
@@ -218,6 +220,26 @@ export default {
             }, ...args.slice(1, args.length - 1));
 
         });
+    },
+    authenticate: function (callback) {
+        var that = this;
+        var cid = _connectionID;
+        function done(err, res) {
+            if (err) {
+                if (callback) callback(err);
+                return;
+            }
+            if (that.getConnectionId() !== cid) {
+                if (callback) callback({ message: 'Connection Switched', status: -1 });
+                return;
+            }
+            _rateLimitError = undefined;
+            dispatch.call('change');
+            if (callback) callback(err, res);
+            that.userChangesets(function () { });  // eagerly load user details/changesets
+        }
+
+        return oauth.authenticate(done);
     },
     authenticated: function () {
         return oauth.authenticated();

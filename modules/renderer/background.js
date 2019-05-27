@@ -228,14 +228,16 @@ export function rendererBackground(context) {
 
     background.loadimageryFromServer = function () {
         if (!osmKelai.authenticated()) {
+            return new Promise(function (resolve, reject) {
             osmKelai.authenticate(function (err) {
                 if (err) {
+                        reject(err);
                     // cancel();   // quit save mode..
                 } else {
-                    background.loadimageryFromServer();  // continue where we left off..
+                        resolve(background.loadimageryFromServer());  // continue where we left off..
                 }
             });
-            return;
+            });
         }
         if (imageryFromServer) {
             return imageryFromServer;
