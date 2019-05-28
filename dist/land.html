@@ -30,7 +30,7 @@
         }
         var oauth_token = stringQs(window.location.href.split('?')[1]).oauth_token;
         oauth.bootstrapToken(oauth_token, function () {
-            location.href = '/?oauth_token=' + oauth_token;
+            location.href = '/';
         });
     </script>
 </body>

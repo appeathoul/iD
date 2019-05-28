@@ -389,6 +389,7 @@ export function rendererBackground(context) {
 
 
     background.init = function () {
+        var that =this;
         co(function* () {
         function parseMap(qmap) {
             if (!qmap) return false;
