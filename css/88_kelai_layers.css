@@ -47,6 +47,15 @@
   margin-left: 8px;
 }
 
+.layers-search-header {
+  line-height: 40px;
+  text-align: center;
+}
+
+.layers-search-header input {
+  width: 90%;
+}
+
 .layers-items-container .layers-item-type .layers-item-type-box {
   display: flex;
   justify-content: center;
