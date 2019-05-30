@@ -59,7 +59,7 @@ export function uiInit(context) {
             .call(uiFullScreen(context));
 
         var map = context.map();
-        map.redrawEnable(false);  // don't draw until we've set zoom/lat/long
+        //map.redrawEnable(false);
 
         header
             .append('div')
@@ -94,15 +94,9 @@ export function uiInit(context) {
             .attr('class', 'fillD')
             .call(uiTopToolbar(context));
 
-        content
-            .append('div')
-            .attr('id', 'map')
-            .attr('dir', 'ltr')
-            .call(map);
-
         content.append('div')
             .attr('class', 'map-toolbox')
-            .call(ui.toolbox);
+            .call(uiToolbox(context));
 
 
         // Map controls
@@ -120,12 +114,17 @@ export function uiInit(context) {
             .attr('class', 'map-control geolocate-control')
             .call(uiGeolocate(context));
         context.background().on('onloaded', function () {
+            content
+                .append('div')
+                .attr('id', 'map')
+                .attr('dir', 'ltr')
+                .call(map);
             var background = uiBackground(context);
             controls
                 .append('div')
                 .attr('class', 'map-control background-control')
                 .call(background.renderToggleButton);
-                var overMap = content
+            var overMap = content
                 .append('div')
                 .attr('class', 'over-map');
 
@@ -155,8 +154,118 @@ export function uiInit(context) {
                 .classed('al', true)       // 'al'=left,  'ar'=right
                 .classed('hide', true)
                 .call(ui.photoviewer);
-        });
 
+            // Add attribution and footer
+            var about = content
+                .append('div')
+                .attr('id', 'about');
+
+            about
+                .append('div')
+                .attr('id', 'attrib')
+                .attr('dir', 'ltr')
+                .call(uiAttribution(context));
+
+            about
+                .append('div')
+                .attr('class', 'api-status')
+                .call(uiStatus(context));
+
+
+            var footer = about
+                .append('div')
+                .attr('id', 'footer')
+                .attr('class', 'fillD');
+
+            footer
+                .append('div')
+                .attr('id', 'flash-wrap')
+                .attr('class', 'footer-hide');
+
+            var footerWrap = footer
+                .append('div')
+                .attr('id', 'footer-wrap')
+                .attr('class', 'footer-show');
+
+            footerWrap
+                .append('div')
+                .attr('id', 'scale-block')
+                .call(uiScale(context));
+
+            var aboutList = footerWrap
+                .append('div')
+                .attr('id', 'info-block')
+                .append('ul')
+                .attr('id', 'about-list');
+
+            if (!context.embed()) {
+                aboutList
+                    .call(uiAccount(context));
+            }
+
+            aboutList
+                .append('li')
+                .attr('class', 'version')
+                .call(uiVersion(context));
+
+            var issueLinks = aboutList
+                .append('li');
+
+            issueLinks
+                .append('a')
+                .attr('target', '_blank')
+                .attr('tabindex', -1)
+                .attr('href', 'https://github.com/openstreetmap/iD/issues')
+                .call(svgIcon('#iD-icon-bug', 'light'))
+                .call(tooltip().title(t('report_a_bug')).placement('top'));
+
+            issueLinks
+                .append('a')
+                .attr('target', '_blank')
+                .attr('tabindex', -1)
+                .attr('href', 'https://github.com/openstreetmap/iD/blob/master/CONTRIBUTING.md#translating')
+                .call(svgIcon('#iD-icon-translate', 'light'))
+                .call(tooltip().title(t('help_translate')).placement('top'));
+
+            aboutList
+                .append('li')
+                .attr('class', 'feature-warning')
+                .attr('tabindex', -1)
+                .call(uiFeatureInfo(context));
+
+            aboutList
+                .append('li')
+                .attr('class', 'user-list')
+                .attr('tabindex', -1)
+                .call(uiContributors(context));
+
+
+            // Setup map dimensions and move map to initial center/zoom.
+            // This should happen after #content and toolbars exist.
+            ui.onResize();
+
+            var hash = behaviorHash(context);
+            hash();
+            if (!hash.hadHash) {
+                map.centerZoom([0, 0], 2);
+            }
+
+            if (!_initCounter++) {
+                if (!hash.startWalkthrough) {
+                    context.container()
+                        .call(uiSplash(context))
+                        .call(uiRestore(context));
+                }
+
+                context.container()
+                    .call(uiShortcuts(context));
+            }
+
+            if (hash.startWalkthrough) {
+                hash.startWalkthrough = false;
+                context.container().call(uiIntro(context));
+            }
+        });
 
 
         var mapData = uiMapData(context);
@@ -181,106 +290,6 @@ export function uiInit(context) {
             .append('div')
             .attr('class', 'spinner')
             .call(uiSpinner(context));
-
-        // Add attribution and footer
-        var about = content
-            .append('div')
-            .attr('id', 'about');
-
-        about
-            .append('div')
-            .attr('id', 'attrib')
-            .attr('dir', 'ltr')
-            .call(uiAttribution(context));
-
-        about
-            .append('div')
-            .attr('class', 'api-status')
-            .call(uiStatus(context));
-
-
-        var footer = about
-            .append('div')
-            .attr('id', 'footer')
-            .attr('class', 'fillD');
-
-        footer
-            .append('div')
-            .attr('id', 'flash-wrap')
-            .attr('class', 'footer-hide');
-
-        var footerWrap = footer
-            .append('div')
-            .attr('id', 'footer-wrap')
-            .attr('class', 'footer-show');
-
-        footerWrap
-            .append('div')
-            .attr('id', 'scale-block')
-            .call(uiScale(context));
-
-        var aboutList = footerWrap
-            .append('div')
-            .attr('id', 'info-block')
-            .append('ul')
-            .attr('id', 'about-list');
-
-        if (!context.embed()) {
-            aboutList
-                .call(uiAccount(context));
-        }
-
-        aboutList
-            .append('li')
-            .attr('class', 'version')
-            .call(uiVersion(context));
-
-        var issueLinks = aboutList
-            .append('li');
-
-        issueLinks
-            .append('a')
-            .attr('target', '_blank')
-            .attr('tabindex', -1)
-            .attr('href', 'https://github.com/openstreetmap/iD/issues')
-            .call(svgIcon('#iD-icon-bug', 'light'))
-            .call(tooltip().title(t('report_a_bug')).placement('top'));
-
-        issueLinks
-            .append('a')
-            .attr('target', '_blank')
-            .attr('tabindex', -1)
-            .attr('href', 'https://github.com/openstreetmap/iD/blob/master/CONTRIBUTING.md#translating')
-            .call(svgIcon('#iD-icon-translate', 'light'))
-            .call(tooltip().title(t('help_translate')).placement('top'));
-
-        aboutList
-            .append('li')
-            .attr('class', 'feature-warning')
-            .attr('tabindex', -1)
-            .call(uiFeatureInfo(context));
-
-        aboutList
-            .append('li')
-            .attr('class', 'user-list')
-            .attr('tabindex', -1)
-            .call(uiContributors(context));
-
-
-        // Setup map dimensions and move map to initial center/zoom.
-        // This should happen after #content and toolbars exist.
-        ui.onResize();
-        map.redrawEnable(true);
-
-        var hash = behaviorHash(context);
-        hash();
-        if (!hash.hadHash) {
-            map.centerZoom([0, 0], 2);
-        }
-
-
-
-
 
         // Bind events
         window.onbeforeunload = function () {
@@ -312,17 +321,6 @@ export function uiInit(context) {
 
         context.enter(modeBrowse(context));
 
-        if (!_initCounter++) {
-            if (!hash.startWalkthrough) {
-                context.container()
-                    .call(uiSplash(context))
-                    .call(uiRestore(context));
-            }
-
-            context.container()
-                .call(uiShortcuts(context));
-        }
-
         var osm = context.connection();
         var auth = uiLoading(context).message(t('loading_auth')).blocking(true);
 
@@ -338,12 +336,6 @@ export function uiInit(context) {
         }
 
         _initCounter++;
-
-        if (hash.startWalkthrough) {
-            hash.startWalkthrough = false;
-            context.container().call(uiIntro(context));
-        }
-
 
         function pan(d) {
             return function () {
@@ -393,8 +385,6 @@ export function uiInit(context) {
     ui.header = uiHeader(context);
 
     ui.layers = uiLayers(context);
-
-    ui.toolbox = uiToolbox(context);
 
     ui.sidebar = uiSidebar(context);
 

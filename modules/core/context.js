@@ -532,11 +532,11 @@ export function coreContext() {
     context.overwrite = withDebouncedSave(history.overwrite);
     context.undo = withDebouncedSave(history.undo);
     context.redo = withDebouncedSave(history.redo);
+    connectionKelai = services.osmKelai;
 
     ui = uiInit(context);
 
     connection = services.osm;
-    connectionKelai = services.osmKelai;
     background = rendererBackground(context);
     features = rendererFeatures(context);
     photos = rendererPhotos(context);
