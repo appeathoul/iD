@@ -10,7 +10,7 @@ import _assign from 'lodash-es/assign';
 import rbush from 'rbush';
 // 转换xml数据到json
 import { JXON } from '../util/jxon';
-import { osmBakcground } from '../osm';
+import { osmBakcground, osmLayer } from '../osm';
 import { utilArrayChunk, utilArrayGroupBy, utilArrayUniq, utilRebind, utilTiler, utilQsString } from '../util';
 import co from 'co';
 var tiler = utilTiler();
@@ -46,6 +46,15 @@ var parsers = {
     maps: function nodeData(obj, uid) {
         var childrens = obj.children;
         return new osmBakcground(childrens);
+    },
+    templates: function layerData(obj) {
+        // 获得 layer
+        var layersCollection = obj.children[0].children;
+        if (layersCollection.length > 0) {
+            return new osmLayer(layersCollection[0].children);
+        } else {
+            return new osmLayer([]);
+        }
     }
 };
 
@@ -125,6 +134,9 @@ export default {
     getConnectionId: function () {
         return _connectionID;
     },
+    getUrlRoot: function () {
+        return urlroot;
+    },
     // Generic method to load data from the OSM API
     // Can handle either auth or unauth calls.
     loadFromAPI: function (path, callback, options) {
@@ -198,6 +210,16 @@ export default {
             '/api/0.6/map/find_all',
             function (err, backgrounds) {
                 if (callback) callback(err, { backgrounds: backgrounds });
+            },
+            options
+        );
+    },
+    // 获得左侧图层参数
+    getTemplete: function (callback, options) {
+        this.loadFromAPI(
+            '/api/0.6/template/find_tmpl',
+            function (err, layers) {
+                if (callback) callback(err, { layers: layers });
             },
             options
         );

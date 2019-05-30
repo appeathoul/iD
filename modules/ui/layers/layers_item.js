@@ -11,63 +11,20 @@ import { svgIcon } from '../../svg';
 import { tooltip } from '../../util/tooltip.kelai';
 import { uiTooltipHtml } from '../tooltipHtml';
 
-export function uiLayersItem(context) {
+export function uiLayersItem(context, _layers) {
     var dispatch = d3_dispatch(
         // 选中事件
         'select')
         , wrap = null
         , lockIcon = 'iD-icon-lock'
-        , layers = [{
-            id: 1,
-            // 显示内容
-            title: '省级行政区',
-            // 空间类型图标
-            icon: 'iD-icon-plane',
-            // 属性类型图标
-            typeIcon: 'iD-icon-district',
-            // 是否锁定
-            lock: true
-        }, {
-            id: 2,
-            title: '市级行政区',
-            icon: 'iD-icon-plane',
-            typeIcon: 'iD-icon-district'
-        }, {
-            id: 3,
-            title: '区县行政区',
-            icon: 'iD-icon-plane',
-            typeIcon: 'iD-icon-district'
-        }, {
-            id: 4,
-            title: '镇村行政区',
-            icon: 'iD-icon-plane',
-            typeIcon: 'iD-icon-district'
-        }, {
-            id: 5,
-            title: '街道',
-            icon: 'iD-icon-line-new',
-            typeIcon: 'iD-icon-floor'
-        }, {
-            id: 6,
-            title: '社区',
-            icon: 'iD-icon-line-new',
-            typeIcon: 'iD-icon-floor'
-        }, {
-            id: 7,
-            title: '网格',
-            icon: 'iD-icon-line-new',
-            typeIcon: 'iD-icon-floor'
-        }, {
-            id: 8,
-            title: '楼栋',
-            icon: 'iD-icon-spot',
-            typeIcon: 'iD-icon-floor'
-        }];
+        , osmKelai = context.connectionKelai()
+        , layers = _layers;
     // 绘制
     function redraw(selection) {
         var itemsContainer = selection
             .append('div')
             .attr('class', 'layers-items-container');
+
         var items = itemsContainer.selectAll('.layers-items-container')
             .data(layers)
             .enter()
@@ -84,8 +41,13 @@ export function uiLayersItem(context) {
             .attr('class', 'layers-item-type-box')
             .call(function (selection) {
                 selection.each(function (d) {
-                    this.typeIconContent = d.typeIcon;
-                    svgIcon('#' + this.typeIconContent, 'inline')(d3_select(this));
+                    let rootUrl = osmKelai.getUrlRoot();
+                    this.iconContent = rootUrl + '/' + d.typeIcon;
+                    d3_select(this)
+                        .append('img')
+                        .attr('src', this.iconContent)
+                        .style('height', '80%');
+                    // svgIcon('#' + this.typeIconContent, 'inline')(d3_select(this));
                 });
             });
         // 添加空间型图标和文字
