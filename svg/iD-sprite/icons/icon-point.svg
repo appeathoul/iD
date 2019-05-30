@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" width="20" height="20" viewBox="0 0 20 20">
-    <path d="M10,3 C6.686,3 4,5.612 4,8.833 C4,12.055 10,17 10,17 C10,17 16,12.055 16,8.833 C16,5.612 13.314,3 10,3 z M10.187,6.5 C11.513,6.5 12.587,7.545 12.587,8.833 C12.587,10.122 11.513,11.167 10.187,11.167 C8.862,11.167 7.787,10.122 7.787,8.833 C7.787,7.545 8.862,6.5 10.187,6.5 z" fill="currentColor"/>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.5 (67469) - http://www.bohemiancoding.com/sketch -->
+    <title>tool_spot_slice</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-11.000000, -2.000000)" fill="#5B7897" fill-rule="nonzero">
+            <g id="tool_spot" transform="translate(16.000000, 5.000000)">
+                <path d="M5,0.4875 C2.33333333,0.4875 0.111111111,2.6 0.111111111,5.25416667 C0.111111111,8.55833333 3.61111111,11.5916667 4.66666667,12.4041667 C4.88888889,12.5666667 5.11111111,12.5666667 5.33333333,12.4041667 C6.38888889,11.5916667 9.88888889,8.55833333 9.88888889,5.25416667 C9.88888889,2.6 7.66666667,0.4875 5,0.4875 Z M5,7.25833333 C3.88888889,7.25833333 2.94444444,6.3375 2.94444444,5.25416667 C2.94444444,4.17083333 3.88888889,3.25 5,3.25 C6.11111111,3.25 7.05555556,4.17083333 7.05555556,5.25416667 C7.05555556,6.3375 6.11111111,7.25833333 5,7.25833333 Z" id="Shape"></path>
+            </g>
+        </g>
+    </g>
 </svg>

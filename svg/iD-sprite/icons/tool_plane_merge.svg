@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.5 (67469) - http://www.bohemiancoding.com/sketch -->
+    <title>tool_merge_slice</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-11.000000, -1.000000)">
+            <g id="tool_merge" transform="translate(15.000000, 5.000000)">
+                <path d="M7.88466258,4.12377049 L7.88466258,0.00678688525 L0.00677300613,0.00678688525 L0.00677300613,7.90081967 L4.11533742,7.90081967 L4.11533742,11.992623 L11.993227,11.992623 L11.993227,4.12377049 L7.88466258,4.12377049 Z M0.578453988,7.35314754 L0.578453988,0.585934426 L7.33182822,0.585934426 L7.33182822,4.12377049 L4.11533742,4.12377049 L4.11533742,7.37832787 L0.578453988,7.35314754 Z M7.33182822,4.6777377 L7.33182822,7.35314754 L4.66188957,7.35314754 L4.66188957,4.6777377 L7.33182822,4.6777377 Z M11.4152638,11.4449508 L4.66188957,11.4449508 L4.66188957,7.90081967 L7.88466258,7.90081967 L7.88466258,4.6777377 L11.390135,4.6777377 L11.4152638,11.4449508 Z" id="形状" stroke="#5B7897" stroke-width="0.8" fill="#5B7897" fill-rule="nonzero"></path>
+                <rect id="矩形" fill="#6DD401" x="4" y="4" width="4" height="4"></rect>
+            </g>
+        </g>
+    </g>
+</svg>
