@@ -46,10 +46,10 @@ Object.assign(osmBakcground.prototype, {
         });
         this.backgrounds.push(json);
     },
-    getBackground: function () {
+    getBackgrounds: function () {
         return this.backgrounds;
     },
-    hasBackground: function () {
+    hasBackgrounds: function () {
         if (this.backgrounds.length > 0) {
             return true;
         } else {
