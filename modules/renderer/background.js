@@ -411,7 +411,7 @@ export function rendererBackground(context) {
         imageryFromServer = ImageryServer;
         if (imageryFromServer) {
             data.imagery.length = 0;
-            let backgroundServer = ImageryServer.backgrounds[0].getBackground();
+            let backgroundServer = ImageryServer.backgrounds[0].getBackgrounds();
             for (var i = 0; i < backgroundServer.length; i++) {
                 data.imagery.push(backgroundServer[i]);
             }
