@@ -99,6 +99,9 @@ export function uiLayers(context) {
                     .on('input', inputevent);
                 var layersTemplete = yield layers.loadTemplete();
                 layersArr = layersTemplete.layers[0].getLayers();
+
+                titleContainerEnter.selectAll('.layers-container-title-content')
+                    .text('地图图层：共' + _layerscount.apply(this, arguments) + '个图层');
                 layersItems('');
             });
         }
@@ -137,12 +140,9 @@ export function uiLayers(context) {
             layersItems(q);
         }
     }
-    var _layerscount;
-    if (layersArr) {
-        _layerscount = utilFunctor(layersArr.length);
-    } else {
-        _layerscount = utilFunctor(0);
-    }
+    var _layerscount = function () {
+        return layersArr.length;
+    };
 
 
     // get set
