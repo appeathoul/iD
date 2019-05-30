@@ -18,16 +18,16 @@ import { uiPresetIcon } from '../preset_icon';
 import { utilKeybinding, utilNoAuto, utilRebind } from '../../util';
 
 
-export function uiToolSearchAdd(context) {
+export function uiToolAddFeature(context) {
 
     var tool = {
-        id: 'search_add',
-        label: t('inspector.search')
+        id: 'add_feature',
+        label: t('toolbar.add_feature')
     };
 
     var dispatch = d3_dispatch('choose');
     var presets;
-    var searchWrap = d3_select(null),
+    var button = d3_select(null),
         search = d3_select(null),
         popover = d3_select(null),
         popoverContent = d3_select(null),
@@ -68,73 +68,84 @@ export function uiToolSearchAdd(context) {
     tool.render = function(selection) {
         updateShownGeometry(allowedGeometry.slice());   // shallow copy
 
-        searchWrap = selection
-            .append('div')
-            .attr('class', 'search-wrap')
+        button = selection
+            .append('button')
+            .attr('class', 'bar-button wide')
+            .attr('tabindex', -1)
+            .on('mousedown', function() {
+                d3_event.preventDefault();
+                d3_event.stopPropagation();
+            })
+            .on('mouseup', function() {
+                d3_event.preventDefault();
+                d3_event.stopPropagation();
+            })
+            .on('click', function() {
+                if (button.classed('disabled')) return;
+
+                if (popover.classed('hide')) {
+                    popover.classed('hide', false);
+                    search.node().focus();
+                    search.node().setSelectionRange(0, search.property('value').length);
+                } else {
+                    search.node().blur();
+                }
+            })
             .call(tooltip()
                 .placement('bottom')
                 .html(true)
                 .title(function() { return uiTooltipHtml(t('modes.add_feature.description'), key); })
-            );
+            )
+            .call(svgIcon('#iD-logo-features'));
 
-        search = searchWrap
+        popover = selection
+            .append('div')
+            .attr('class', 'popover fillL hide');
+
+        var header = popover
+            .append('div')
+            .attr('class', 'popover-header');
+
+        search = header
             .append('input')
             .attr('class', 'search-input')
-            .attr('placeholder', t('modes.add_feature.title'))
+            .attr('placeholder', t('modes.add_feature.search_placeholder'))
             .attr('type', 'search')
             .call(utilNoAuto)
-            .on('mousedown', function() {
-                search.attr('clicking', true);
-            })
-            .on('mouseup', function() {
-                search.attr('clicking', null);
-            })
             .on('focus', function() {
-                searchWrap.classed('focused', true);
-                if (search.attr('clicking')) {
-                    search.attr('focusing', true);
-                    search.attr('clicking', null);
-                } else {
-                    search.node().setSelectionRange(0, search.property('value').length);
-                }
-                popover.classed('hide', false);
+                button.classed('active', true);
             })
             .on('blur', function() {
-                searchWrap.classed('focused', false);
+                button.classed('active', false);
                 popover.classed('hide', true);
-            })
-            .on('click', function() {
-                if (search.attr('focusing')) {
-                    search.node().setSelectionRange(0, search.property('value').length);
-                    search.attr('focusing', null);
-                }
             })
             .on('keypress', keypress)
             .on('keydown', keydown)
             .on('input', updateResultsList);
 
-        searchWrap
+        header
             .call(svgIcon('#iD-icon-search', 'search-icon pre-text'));
 
-        popover = searchWrap
+        popoverContent = popover
             .append('div')
-            .attr('class', 'popover fillL hide')
+            .attr('class', 'popover-content')
             .on('mousedown', function() {
                 // don't blur the search input (and thus close results)
                 d3_event.preventDefault();
                 d3_event.stopPropagation();
             });
 
-        popoverContent = popover
-            .append('div')
-            .attr('class', 'popover-content');
-
         list = popoverContent.append('div')
             .attr('class', 'list');
 
         footer = popover
             .append('div')
-            .attr('class', 'popover-footer');
+            .attr('class', 'popover-footer')
+            .on('mousedown', function() {
+                // don't blur the search input (and thus close results)
+                d3_event.preventDefault();
+                d3_event.stopPropagation();
+            });
 
         message = footer.append('div')
             .attr('class', 'message');
@@ -163,10 +174,12 @@ export function uiToolSearchAdd(context) {
             });
 
         context.features()
-            .on('change.search-add', updateForFeatureHiddenState);
+            .on('change.add-feature-tool', updateForFeatureHiddenState);
 
         context.keybinding().on(key, function() {
+            popover.classed('hide', false);
             search.node().focus();
+            search.node().setSelectionRange(0, search.property('value').length);
             d3_event.preventDefault();
             d3_event.stopPropagation();
         });
@@ -174,8 +187,8 @@ export function uiToolSearchAdd(context) {
         var debouncedUpdate = _debounce(updateEnabledState, 500, { leading: true, trailing: true });
 
         context.map()
-            .on('move.search-add', debouncedUpdate)
-            .on('drawn.search-add', debouncedUpdate);
+            .on('move.add-feature-tool', debouncedUpdate)
+            .on('drawn.add-feature-tool', debouncedUpdate);
 
         updateEnabledState();
 
@@ -186,11 +199,11 @@ export function uiToolSearchAdd(context) {
         context.keybinding().off(key);
 
         context.features()
-            .on('change.search-add', null);
+            .on('change.add-feature-tool', null);
 
         context.map()
-            .on('move.search-add', null)
-            .on('drawn.search-add', null);
+            .on('move.add-feature-tool', null)
+            .on('drawn.add-feature-tool', null);
     };
 
     function osmEditable() {
@@ -200,7 +213,7 @@ export function uiToolSearchAdd(context) {
 
     function updateEnabledState() {
         var isEnabled = osmEditable();
-        searchWrap.classed('disabled', !isEnabled);
+        button.classed('disabled', !isEnabled);
         if (!isEnabled) {
             search.node().blur();
         }
@@ -471,7 +484,7 @@ export function uiToolSearchAdd(context) {
 
     function updateForFeatureHiddenState() {
 
-        var listItem = d3_selectAll('.search-add .popover .list-item');
+        var listItem = d3_selectAll('.add-feature .popover .list-item');
 
         // remove existing tooltips
         listItem.selectAll('button.choose').call(tooltip().destroyAny);

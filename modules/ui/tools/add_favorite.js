@@ -14,7 +14,7 @@ export function uiToolAddFavorite(context) {
 
     var tool = {
         id: 'add_favorite',
-        klass: 'modes',
+        itemClass: 'modes',
         label: t('toolbar.favorites')
     };
 
@@ -46,14 +46,6 @@ export function uiToolAddFavorite(context) {
             .on('enter.editor.favorite', function(entered) {
                 selection.selectAll('button.add-button')
                     .classed('active', function(mode) { return entered.button === mode.button; });
-                context.container()
-                    .classed('mode-' + entered.id, true);
-            });
-
-        context
-            .on('exit.editor.favorite', function(exited) {
-                context.container()
-                    .classed('mode-' + exited.id, false);
             });
 
         var debouncedUpdate = _debounce(update, 500, { leading: true, trailing: true });
