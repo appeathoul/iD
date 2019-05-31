@@ -10,6 +10,7 @@ import { osmNode, osmWay } from '../osm';
 
 export function modeAddArea(context, mode) {
     mode.id = 'add-area';
+    mode.repeatCount = 0;
 
     var behavior = behaviorAddWay(context)
         .tail(t('modes.add_area.tail'))
@@ -40,7 +41,7 @@ export function modeAddArea(context, mode) {
             actionClose(way.id)
         );
 
-        context.enter(modeDrawArea(context, way.id, startGraph, context.graph(), mode.button));
+        enterDrawMode(way, startGraph);
     }
 
 
@@ -57,7 +58,7 @@ export function modeAddArea(context, mode) {
             actionAddMidpoint({ loc: loc, edge: edge }, node)
         );
 
-        context.enter(modeDrawArea(context, way.id, startGraph, context.graph(), mode.button));
+        enterDrawMode(way, startGraph);
     }
 
 
@@ -71,7 +72,16 @@ export function modeAddArea(context, mode) {
             actionClose(way.id)
         );
 
-        context.enter(modeDrawArea(context, way.id, startGraph, context.graph(), mode.button));
+        enterDrawMode(way, startGraph);
+    }
+
+
+    function enterDrawMode(way, startGraph) {
+        var drawMode = modeDrawArea(context, way.id, startGraph, context.graph(), mode.button, mode);
+        drawMode.repeatAddedFeature = mode.repeatAddedFeature;
+        drawMode.repeatCount = mode.repeatCount;
+        drawMode.title = mode.title;
+        context.enter(drawMode);
     }
 
 

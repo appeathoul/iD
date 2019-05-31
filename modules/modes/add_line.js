@@ -10,6 +10,7 @@ import { osmNode, osmWay } from '../osm';
 
 export function modeAddLine(context, mode) {
     mode.id = 'add-line';
+    mode.repeatCount = 0;
 
     var behavior = behaviorAddWay(context)
         .tail(t('modes.add_line.tail'))
@@ -32,7 +33,7 @@ export function modeAddLine(context, mode) {
             actionAddVertex(way.id, node.id)
         );
 
-        context.enter(modeDrawLine(context, way.id, startGraph, context.graph(), mode.button));
+        enterDrawMode(way, startGraph);
     }
 
 
@@ -48,7 +49,7 @@ export function modeAddLine(context, mode) {
             actionAddMidpoint({ loc: loc, edge: edge }, node)
         );
 
-        context.enter(modeDrawLine(context, way.id, startGraph, context.graph(), mode.button));
+        enterDrawMode(way, startGraph);
     }
 
 
@@ -61,7 +62,16 @@ export function modeAddLine(context, mode) {
             actionAddVertex(way.id, node.id)
         );
 
-        context.enter(modeDrawLine(context, way.id, startGraph, context.graph(), mode.button));
+        enterDrawMode(way, startGraph);
+    }
+
+
+    function enterDrawMode(way, startGraph) {
+        var drawMode = modeDrawLine(context, way.id, startGraph, context.graph(), mode.button, null, mode);
+        drawMode.repeatAddedFeature = mode.repeatAddedFeature;
+        drawMode.repeatCount = mode.repeatCount;
+        drawMode.title = mode.title;
+        context.enter(drawMode);
     }
 
 

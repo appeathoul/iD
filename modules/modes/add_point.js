@@ -11,6 +11,7 @@ import { actionAddMidpoint } from '../actions/add_midpoint';
 export function modeAddPoint(context, mode) {
 
     mode.id = 'add-point';
+    mode.repeatCount = 0;
 
     var behavior = behaviorDraw(context)
         .tail(t('modes.add_point.tail'))
@@ -32,7 +33,7 @@ export function modeAddPoint(context, mode) {
             t('operations.add.annotation.point')
         );
 
-        enterSelectMode(node);
+        didFinishAdding(node);
     }
 
 
@@ -44,19 +45,12 @@ export function modeAddPoint(context, mode) {
             t('operations.add.annotation.vertex')
         );
 
-        enterSelectMode(node);
+        didFinishAdding(node);
     }
-
-    function enterSelectMode(node) {
-        context.enter(
-            modeSelect(context, [node.id]).newFeature(true)
-        );
-    }
-
 
     function addNode(node) {
         if (Object.keys(defaultTags).length === 0) {
-            enterSelectMode(node);
+            didFinishAdding(node);
             return;
         }
 
@@ -70,7 +64,17 @@ export function modeAddPoint(context, mode) {
             t('operations.add.annotation.point')
         );
 
-        enterSelectMode(node);
+        didFinishAdding(node);
+    }
+
+    function didFinishAdding(node) {
+        if (mode.repeatAddedFeature) {
+            mode.repeatCount += 1;
+        } else {
+            context.enter(
+                modeSelect(context, [node.id]).newFeature(true)
+            );
+        }
     }
 
 

@@ -17,13 +17,19 @@ en:
     favorites: Favorites
     add_feature: Add Feature
     finish: Finish
+    repeat:
+      title: Repeat
+      tooltip:
+        point: "Add another {feature} after this one."
+        way: "Start another {feature} after finishing this one."
+      key: R
     segments:
       title: Segments
       straight:
         title: Straight
       orthogonal:
         title: Rectangular
-      shortcut: A
+      key: A
   modes:
     add_feature:
       search_placeholder: Search feature types

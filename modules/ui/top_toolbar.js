@@ -8,6 +8,7 @@ import _debounce from 'lodash-es/debounce';
 import { uiToolAddFavorite, uiToolAddRecent, uiToolNotes, uiToolOperation, uiToolSave, uiToolAddFeature, uiToolSidebarToggle, uiToolUndoRedo } from './tools';
 import { uiToolSimpleButton } from './tools/simple_button';
 import { uiToolWaySegments } from './tools/way_segments';
+import { uiToolRepeatAdd } from './tools/repeat_add';
 
 export function uiTopToolbar(context) {
 
@@ -19,6 +20,7 @@ export function uiTopToolbar(context) {
         undoRedo = uiToolUndoRedo(context),
         save = uiToolSave(context),
         waySegments = uiToolWaySegments(context),
+        repeatAdd = uiToolRepeatAdd(context),
         deselect = uiToolSimpleButton('deselect', t('toolbar.deselect.title'), 'iD-icon-close', function() {
             context.enter(modeBrowse(context));
         }, null, 'Esc'),
@@ -27,7 +29,11 @@ export function uiTopToolbar(context) {
         }, null, 'Esc', 'wide'),
         finishDrawing = uiToolSimpleButton('finish', t('toolbar.finish'), 'iD-icon-apply', function() {
             var mode = context.mode();
-            if (mode.finish) mode.finish();
+            if (mode.finish) {
+                mode.finish();
+            } else {
+                context.enter(modeBrowse(context));
+            }
         }, null, 'Esc', 'wide');
 
     var supportedOperationIDs = ['circularize', 'continue', 'delete', 'disconnect', 'downgrade', 'extract', 'merge', 'orthogonalize', 'split', 'straighten'];
@@ -61,9 +67,6 @@ export function uiTopToolbar(context) {
             mode.selectedIDs().every(function(id) { return context.graph().hasEntity(id); })) {
 
             tools.push(sidebarToggle);
-            tools.push('spacer-half');
-
-            tools.push(deselect);
             tools.push('spacer');
 
             var operationTools = [];
@@ -80,17 +83,17 @@ export function uiTopToolbar(context) {
                     deleteTool = tool;
                 }
             }
-            if (operationTools.length > 0) {
-                tools = tools.concat(operationTools);
-            }
+            tools = tools.concat(operationTools);
             if (deleteTool) {
                 // keep the delete button apart from the others
-                tools.push('spacer-half');
+                if (operationTools.length > 0) {
+                    tools.push('spacer-half');
+                }
                 tools.push(deleteTool);
             }
             tools.push('spacer');
 
-            tools = tools.concat([undoRedo, save]);
+            tools = tools.concat([deselect, undoRedo, save]);
 
         } else if (mode.id === 'add-point' || mode.id === 'add-line' || mode.id === 'add-area' ||
             mode.id === 'draw-line' || mode.id === 'draw-area') {
@@ -106,15 +109,26 @@ export function uiTopToolbar(context) {
             if (mode.id.indexOf('draw') !== -1) {
 
                 tools.push(undoRedo);
+                if (!mode.isContinuing) {
+                    tools.push(repeatAdd);
+                }
 
                 var way = context.hasEntity(mode.wayID);
-                if (way && new Set(way.nodes).size - 1 >= (way.isArea() ? 3 : 2)) {
+                var wayIsDegenerate = way && new Set(way.nodes).size - 1 < (way.isArea() ? 3 : 2);
+                if (!wayIsDegenerate) {
                     tools.push(finishDrawing);
                 } else {
                     tools.push(cancelDrawing);
                 }
             } else {
-                tools.push(cancelDrawing);
+
+                tools.push(repeatAdd);
+
+                if (mode.repeatCount > 0) {
+                    tools.push(finishDrawing);
+                } else {
+                    tools.push(cancelDrawing);
+                }
             }
 
         } else {
