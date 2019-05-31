@@ -11,14 +11,14 @@ import { svgIcon } from '../../svg';
 import { tooltip } from '../../util/tooltip.kelai';
 import { uiTooltipHtml } from '../tooltipHtml';
 
-export function uiLayersItem(context, _layers) {
+export function uiLayersItem(context) {
     var dispatch = d3_dispatch(
         // 选中事件
         'select')
         , wrap = null
         , lockIcon = 'iD-icon-lock'
         , osmKelai = context.connectionKelai()
-        , layers = _layers;
+        , layers;
     // 绘制
     function redraw(selection) {
         var itemsContainer = selection
@@ -30,8 +30,13 @@ export function uiLayersItem(context, _layers) {
             .enter()
             .append('div')
             .attr('class', 'layers-item')
-            .on('click.layers', function () {
-                alert('123');
+            .on('click.layers', function (o) {
+                var that = this;
+                selection.selectAll('.layers-item')
+                    .classed('active', function (mode, b, c) {
+                        return that === c[b];
+                    });
+                dispatch.call('select', this, o);
             });
         // 添加属性类型图标
         items
@@ -83,8 +88,9 @@ export function uiLayersItem(context, _layers) {
             });
     }
 
-    function layersItem(selection) {
+    function layersItem(selection, _layers) {
         wrap = selection;
+        layers = _layers;
         selection.call(redraw);
     }
 

@@ -102,128 +102,133 @@ export function rendererFeatures(context) {
     }
 
 
-    defineRule('points', function isPoint(tags, geometry) {
-        return geometry === 'point';
-    }, 200);
+    // defineRule('points', function isPoint(tags, geometry) {
+    //     return geometry === 'point';
+    // }, 200);
 
-    defineRule('traffic_roads', function isTrafficRoad(tags) {
-        return traffic_roads[tags.highway];
-    });
+    // defineRule('traffic_roads', function isTrafficRoad(tags) {
+    //     return traffic_roads[tags.highway];
+    // });
 
-    defineRule('service_roads', function isServiceRoad(tags) {
-        return service_roads[tags.highway];
-    });
+    // defineRule('service_roads', function isServiceRoad(tags) {
+    //     return service_roads[tags.highway];
+    // });
 
-    defineRule('paths', function isPath(tags) {
-        return paths[tags.highway];
-    });
+    // defineRule('paths', function isPath(tags) {
+    //     return paths[tags.highway];
+    // });
 
-    defineRule('buildings', function isBuilding(tags) {
-        return (
-            (!!tags.building && tags.building !== 'no') ||
-            tags.parking === 'multi-storey' ||
-            tags.parking === 'sheds' ||
-            tags.parking === 'carports' ||
-            tags.parking === 'garage_boxes'
-        );
-    }, 250);
+    // defineRule('buildings', function isBuilding(tags) {
+    //     return (
+    //         (!!tags.building && tags.building !== 'no') ||
+    //         tags.parking === 'multi-storey' ||
+    //         tags.parking === 'sheds' ||
+    //         tags.parking === 'carports' ||
+    //         tags.parking === 'garage_boxes'
+    //     );
+    // }, 250);
 
-    defineRule('building_parts', function isBuildingPart(tags) {
-        return tags['building:part'];
-    });
+    // defineRule('building_parts', function isBuildingPart(tags) {
+    //     return tags['building:part'];
+    // });
 
-    defineRule('indoor', function isIndoor(tags) {
-        return tags.indoor;
-    });
+    // defineRule('indoor', function isIndoor(tags) {
+    //     return tags.indoor;
+    // });
 
-    defineRule('landuse', function isLanduse(tags, geometry) {
-        return geometry === 'area' &&
-            !_rules.buildings.filter(tags) &&
-            !_rules.building_parts.filter(tags) &&
-            !_rules.indoor.filter(tags) &&
-            !_rules.water.filter(tags) &&
-            !_rules.pistes.filter(tags);
-    });
+    // defineRule('landuse', function isLanduse(tags, geometry) {
+    //     return geometry === 'area' &&
+    //         !_rules.buildings.filter(tags) &&
+    //         !_rules.building_parts.filter(tags) &&
+    //         !_rules.indoor.filter(tags) &&
+    //         !_rules.water.filter(tags) &&
+    //         !_rules.pistes.filter(tags);
+    // });
 
-    defineRule('boundaries', function isBoundary(tags) {
-        return (
-            !!tags.boundary
-        ) && !(
-            traffic_roads[tags.highway] ||
-            service_roads[tags.highway] ||
-            paths[tags.highway] ||
-            tags.waterway ||
-            tags.railway ||
-            tags.landuse ||
-            tags.natural ||
-            tags.building ||
-            tags.power
-        );
-    });
+    // defineRule('boundaries', function isBoundary(tags) {
+    //     return (
+    //         !!tags.boundary
+    //     ) && !(
+    //         traffic_roads[tags.highway] ||
+    //         service_roads[tags.highway] ||
+    //         paths[tags.highway] ||
+    //         tags.waterway ||
+    //         tags.railway ||
+    //         tags.landuse ||
+    //         tags.natural ||
+    //         tags.building ||
+    //         tags.power
+    //     );
+    // });
 
-    defineRule('water', function isWater(tags) {
-        return (
-            !!tags.waterway ||
-            tags.natural === 'water' ||
-            tags.natural === 'coastline' ||
-            tags.natural === 'bay' ||
-            tags.landuse === 'pond' ||
-            tags.landuse === 'basin' ||
-            tags.landuse === 'reservoir' ||
-            tags.landuse === 'salt_pond'
-        );
-    });
-
-    defineRule('rail', function isRail(tags) {
-        return (
-            !!tags.railway ||
-            tags.landuse === 'railway'
-        ) && !(
-            traffic_roads[tags.highway] ||
-            service_roads[tags.highway] ||
-            paths[tags.highway]
-        );
-    });
-
-    defineRule('pistes', function isPiste(tags) {
-        return tags['piste:type'];
-    });
-
-    defineRule('aerialways', function isPiste(tags) {
-        return tags.aerialway &&
-            tags.aerialway !== 'yes' &&
-            tags.aerialway !== 'station';
-    });
-
-    defineRule('power', function isPower(tags) {
-        return !!tags.power;
-    });
-
-    // contains a past/future tag, but not in active use as a road/path/cycleway/etc..
-    defineRule('past_future', function isPastFuture(tags) {
-        if (
-            traffic_roads[tags.highway] ||
-            service_roads[tags.highway] ||
-            paths[tags.highway]
-        ) { return false; }
-
-        var strings = Object.keys(tags);
-
-        for (var i = 0; i < strings.length; i++) {
-            var s = strings[i];
-            if (past_futures[s] || past_futures[tags[s]]) { return true; }
-        }
-        return false;
-    });
-
-    // Lines or areas that don't match another feature filter.
-    // IMPORTANT: The 'others' feature must be the last one defined,
-    //   so that code in getMatches can skip this test if `hasMatch = true`
-    defineRule('others', function isOther(tags, geometry) {
-        return (geometry === 'line' || geometry === 'area');
-    });
+    // defineRule('water', function isWater(tags) {
+    //     return (
+    //         !!tags.waterway ||
+    //         tags.natural === 'water' ||
+    //         tags.natural === 'coastline' ||
+    //         tags.natural === 'bay' ||
+    //         tags.landuse === 'pond' ||
+    //         tags.landuse === 'basin' ||
+    //         tags.landuse === 'reservoir' ||
+    //         tags.landuse === 'salt_pond'
+    //     );
+    // });
 
 
+    // defineRule('rail', function isRail(tags) {
+    //     return (
+    //         !!tags.railway ||
+    //         tags.landuse === 'railway'
+    //     ) && !(
+    //         traffic_roads[tags.highway] ||
+    //         service_roads[tags.highway] ||
+    //         paths[tags.highway]
+    //     );
+    // });
+
+    // defineRule('pistes', function isPiste(tags) {
+    //     return tags['piste:type'];
+    // });
+
+    // defineRule('aerialways', function isPiste(tags) {
+    //     return tags.aerialway &&
+    //         tags.aerialway !== 'yes' &&
+    //         tags.aerialway !== 'station';
+    // });
+
+    // defineRule('power', function isPower(tags) {
+    //     return !!tags.power;
+    // });
+
+    // // contains a past/future tag, but not in active use as a road/path/cycleway/etc..
+    // defineRule('past_future', function isPastFuture(tags) {
+    //     if (
+    //         traffic_roads[tags.highway] ||
+    //         service_roads[tags.highway] ||
+    //         paths[tags.highway]
+    //     ) { return false; }
+
+    //     var strings = Object.keys(tags);
+
+    //     for (var i = 0; i < strings.length; i++) {
+    //         var s = strings[i];
+    //         if (past_futures[s] || past_futures[tags[s]]) { return true; }
+    //     }
+    //     return false;
+    // });
+
+    // // Lines or areas that don't match another feature filter.
+    // // IMPORTANT: The 'others' feature must be the last one defined,
+    // //   so that code in getMatches can skip this test if `hasMatch = true`
+    // defineRule('others', function isOther(tags, geometry) {
+    //     return (geometry === 'line' || geometry === 'area');
+    // });
+
+    features.pushRule = function(name, tag, value) {
+        defineRule(name, function isWhere(tags, geometry) {
+            return tags[tag] === value;
+        }, 200);
+    };
 
     features.features = function() {
         return _rules;

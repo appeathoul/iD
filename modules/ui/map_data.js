@@ -605,9 +605,16 @@ export function uiMapData(context) {
             .attr('name', name)
             .on('change', change);
 
-        label
+            label
             .append('span')
-            .text(function(d) { return t(name + '.' + d + '.description'); });
+            .text(function (d) {
+                let trans = t(name + '.' + d + '.description');
+                if (trans.indexOf('Missing') !== -1) {
+                    return d;
+                } else {
+                    return trans;
+                }
+            });
 
         // Update
         items = items

@@ -15,7 +15,6 @@ import { tooltip } from '../../util/tooltip';
 import { uiTooltipHtml } from '../tooltipHtml';
 
 export function uiToolOldDrawModesAdvanced(context) {
-    debugger;
     var tool = {
         id: 'old_modes_advanced',
         // label: t('toolbar.add_feature')

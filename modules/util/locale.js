@@ -58,6 +58,17 @@ export function t(s, o, loc) {
         return o.default;
     }
 
+    if (loc === 'en' && !rep) {
+        let sp = s.split('.');
+        let spText = sp[sp.length - 1];
+        if (spText === 'description') {
+            if (sp.length > 2) {
+                return sp[sp.length - 2];
+            }
+        } else {
+            return spText;
+        }
+    }
     var missing = 'Missing ' + loc + ' translation: ' + s;
     if (typeof console !== 'undefined') console.error(missing); // eslint-disable-line
 

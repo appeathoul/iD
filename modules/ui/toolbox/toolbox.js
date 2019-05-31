@@ -19,6 +19,7 @@ export function uiToolbox(context) {
         mapControls = uiMapControls(context);
 
     function toolbox(selection) {
+        var that = this;
         wrap = selection;
 
         // 绑定窗体大小改变事件
@@ -26,9 +27,20 @@ export function uiToolbox(context) {
 
         selection.call(render);
 
-        var debouncedUpdate = _debounce(update, 500, { leading: true, trailing: true });
+        var debouncedUpdate = _debounce(update, 250, { leading: true, trailing: true });
+        context.history()
+            .on('change.toolbox', debouncedUpdate);
         context.layers()
-            .on('change.topToolbar', debouncedUpdate);
+            .on('change.toolbox', debouncedUpdate);
+        context.map()
+            .on('move.toolbox', debouncedUpdate)
+            .on('drawn.toolbox', debouncedUpdate);
+
+        context.on('enter.toolbox', update);
+
+        context.presets()
+            .on('favoritePreset.toolbox', update)
+            .on('recentsChange.toolbox', update);
 
         update();
         function update() {
@@ -37,10 +49,11 @@ export function uiToolbox(context) {
             ];
             tools = tools.concat([undoRedo, save]);
 
-            var toolbarItems = this.toolboxEditCommon.selectAll('.toolbar-item')
+            var toolbarItems = that.toolboxEditCommon.selectAll('.toolbar-item')
                 .data(tools, function (d) {
                     return d.id || d;
                 });
+
             toolbarItems.exit()
                 .each(function (d) {
                     if (d.uninstall) {
@@ -48,22 +61,27 @@ export function uiToolbox(context) {
                     }
                 })
                 .remove();
+
             var itemsEnter = toolbarItems
                 .enter()
                 .append('div')
                 .attr('class', function (d) {
                     var classes = 'toolbar-item ' + (d.id || d).replace('_', '-');
-                    if (d.klass) classes += ' ' + d.klass;
+                    if (d.itemClass) classes += ' ' + d.itemClass;
                     return classes;
                 });
 
-            var actionableItems = itemsEnter.filter(function (d) { return d !== 'spacer'; });
+            var actionableItems = itemsEnter.filter(function (d) { return typeof d !== 'string'; });
 
             actionableItems
                 .append('div')
-                .attr('class', 'item-content')
+                .attr('class', function (d) {
+                    var classes = 'item-content';
+                    if (d.contentClass) classes += ' ' + d.contentClass;
+                    return classes;
+                })
                 .each(function (d) {
-                    d3_select(this).call(d.render, this.toolboxEditCommon);
+                    d3_select(this).call(d.render, that.toolboxEditCommon);
                 });
 
             actionableItems
@@ -71,6 +89,11 @@ export function uiToolbox(context) {
                 .attr('class', 'item-label')
                 .text(function (d) {
                     return d.label;
+                });
+
+            toolbarItems.merge(itemsEnter)
+                .each(function (d) {
+                    if (d.update) d.update();
                 });
         }
     }

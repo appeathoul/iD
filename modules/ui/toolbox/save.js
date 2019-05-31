@@ -104,10 +104,10 @@ export function uiToolSave(context) {
 
 
         context.history()
-            .on('change.save', updateCount);
+            .on('change.savetoolbox', updateCount);
 
         context
-            .on('enter.save', function () {
+            .on('enter.savetoolbox', function () {
                 if (button) {
                     button
                         .classed('disabled', isDisabled());
@@ -125,10 +125,10 @@ export function uiToolSave(context) {
             .off(key, true);
 
         context.history()
-            .on('change.save', null);
+            .on('change.savetoolbox', null);
 
         context
-            .on('enter.save', null);
+            .on('enter.savetoolbox', null);
 
         button = null;
         tooltipBehavior = null;

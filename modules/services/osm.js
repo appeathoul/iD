@@ -808,7 +808,6 @@ export default {
     // GET /api/0.6/map?bbox=
     loadTiles: function (projection, callback) {
         if (_off) return;
-
         // determine the needed tiles to cover the view
         var tiles = tiler.zoomExtent([_tileZoom, _tileZoom]).getTiles(projection);
 
@@ -822,6 +821,26 @@ export default {
         // issue new requests..
         tiles.forEach(function (tile) {
             this.loadTile(tile, callback);
+        }, this);
+    },
+
+    // Load data (entities) from the API in tiles
+    // GET /api/0.6/map?bbox=
+    loadTilesByOptions: function (projection, options, callback) {
+        if (_off) return;
+        // determine the needed tiles to cover the view
+        var tiles = tiler.zoomExtent([_tileZoom, _tileZoom]).getTiles(projection);
+
+        // abort inflight requests that are no longer needed
+        var hadRequests = hasInflightRequests(_tileCache);
+        abortUnwantedRequests(_tileCache, tiles);
+        if (hadRequests && !hasInflightRequests(_tileCache)) {
+            dispatch.call('loaded');    // stop the spinner
+        }
+
+        // issue new requests..
+        tiles.forEach(function (tile) {
+            this.loadTileByOptions(tile, options, callback);
         }, this);
     },
 
@@ -861,6 +880,41 @@ export default {
         );
     },
 
+    // Load a single data tile
+    // GET /api/0.6/map?bbox=
+    loadTileByOptions: function (tile, tileoptions, callback) {
+        if (_off) return;
+        if (_tileCache.loaded[tile.id] || _tileCache.inflight[tile.id]) return;
+
+        if (!hasInflightRequests(_tileCache)) {
+            dispatch.call('loading');   // start the spinner
+        }
+
+        var path = '/api/0.6/map_custom?key=${key}&value=${value}&bbox=';
+        path = path.replace('${key}', tileoptions.key).replace('${value}', tileoptions.value);
+        var options = { skipSeen: true };
+
+        _tileCache.inflight[tile.id] = this.loadFromAPI(
+            path + tile.extent.toParam(),
+            function (err, parsed) {
+                delete _tileCache.inflight[tile.id];
+                if (!err) {
+                    delete _tileCache.toLoad[tile.id];
+                    _tileCache.loaded[tile.id] = true;
+                    var bbox = tile.extent.bbox();
+                    bbox.id = tile.id;
+                    _tileCache.rtree.insert(bbox);
+                }
+                if (callback) {
+                    callback(err, Object.assign({ data: parsed }, tile));
+                }
+                if (!hasInflightRequests(_tileCache)) {
+                    dispatch.call('loaded');     // stop the spinner
+                }
+            },
+            options
+        );
+    },
 
     isDataLoaded: function (loc) {
         var bbox = { minX: loc[0], minY: loc[1], maxX: loc[0], maxY: loc[1] };
@@ -869,7 +923,7 @@ export default {
 
 
     // load the tile that covers the given `loc`
-    loadTileAtLoc: function(loc, callback) {
+    loadTileAtLoc: function (loc, callback) {
         // Back off if the toLoad queue is filling up.. re #6417
         // (Currently `loadTileAtLoc` requests are considered low priority - used by operations to
         // let users safely edit geometries which extend to unloaded tiles.  We can drop some.)
@@ -880,7 +934,7 @@ export default {
         var projection = geoRawMercator().transform({ k: k, x: -offset[0], y: -offset[1] });
         var tiles = tiler.zoomExtent([_tileZoom, _tileZoom]).getTiles(projection);
 
-        tiles.forEach(function(tile) {
+        tiles.forEach(function (tile) {
             if (_tileCache.toLoad[tile.id] || _tileCache.loaded[tile.id] || _tileCache.inflight[tile.id]) return;
 
             _tileCache.toLoad[tile.id] = true;
@@ -1205,6 +1259,10 @@ export default {
     // Used to populate `closed:note` changeset tag
     getClosedIDs: function () {
         return Object.keys(_noteCache.closed).sort();
+    },
+
+    clearTileCache() {
+        _tileCache = { toLoad: {}, loaded: {}, inflight: {}, seen: {}, rtree: rbush() };
     }
 
 };

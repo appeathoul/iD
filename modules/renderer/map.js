@@ -54,6 +54,10 @@ export function rendererMap(context) {
     var _minzoom = 0;
     var _getMouseCoords;
     var _mouseEvent;
+    var tileOptions = {
+        key: 'none',
+        value: 'none'
+    };
 
     var zoom = d3_zoom()
         .scaleExtent([kMin, kMax])
@@ -118,6 +122,31 @@ export function rendererMap(context) {
 
         context.features()
             .on('redraw.map', immediateRedraw);
+
+        context.ui().layers
+            .on('switch.map', function (e) {
+                let conditionSplit = e.condition ? e.condition.split(',') : []
+                    , conditionSplitValue
+                    , conditionSplitTag;
+                if (conditionSplit.length > 1) {
+                    conditionSplitValue = conditionSplit[1];
+                } else {
+                    conditionSplitValue = '';
+                }
+                if (conditionSplit.length > 0) {
+                    conditionSplitTag = conditionSplit[0];
+                }
+                if (conditionSplitTag && conditionSplitValue) {
+                    tileOptions = {
+                        key: conditionSplitTag,
+                        value: conditionSplitValue
+                    };
+                }
+                context.features().disableAll();
+                context.features().enable(e.key);
+                osm.clearTileCache();
+                immediateRedraw();
+            });
 
         drawLayers
             .on('change.map', function() {
@@ -574,7 +603,11 @@ export function rendererMap(context) {
 
         // OSM
         if (map.editable()) {
+            if (tileOptions.hasOwnProperty('key') && tileOptions.hasOwnProperty('value')) {
+                context.loadTilesByOptions(projection, tileOptions);
+            } else {
             context.loadTiles(projection);
+            }
             drawEditable(difference, extent);
         } else {
             editOff();
@@ -744,7 +777,7 @@ export function rendererMap(context) {
         var proj = geoRawMercator().transform(projection.transform());  // copy projection
         // use the target zoom to calculate the offset center
         proj.scale(geoZoomToScale(zoom, TILESIZE));
-        
+
         var locPx = proj(loc);
         var offsetLocPx = [locPx[0] + offset[0], locPx[1] + offset[1]];
         var offsetLoc = proj.invert(offsetLocPx);
@@ -923,7 +956,7 @@ export function rendererMap(context) {
     };
 
 
-    map.minzoom = function(val) {
+    map.minzoom = function (val) {
         if (!arguments.length) return _minzoom;
         _minzoom = val;
         return map;

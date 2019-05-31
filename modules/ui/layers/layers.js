@@ -3,10 +3,12 @@ import {
     event as d3_event,
     selectAll as d3_selectAll
 } from 'd3-selection';
+import { dispatch as d3_dispatch } from 'd3-dispatch';
 import { utilFunctor } from '../../util/index';
 import { uiLayersItem } from './layers_item';
 import {
-    utilNoAuto
+    utilNoAuto,
+    utilRebind
 } from '../../util';
 import _forEach from 'lodash-es/forEach';
 import _filter from 'lodash-es/filter';
@@ -14,7 +16,9 @@ import co from 'co';
 
 export function uiLayers(context) {
     var wrap = d3_select(null),
+        dispatch = d3_dispatch('switch'),
         container = d3_select(null),
+        layersitem = uiLayersItem(context),
         search,
         osmKelai = context.connectionKelai(),
         layersArr = [];
@@ -100,15 +104,35 @@ export function uiLayers(context) {
                 var layersTemplete = yield layers.loadTemplete();
                 layersArr = layersTemplete.layers[0].getLayers();
 
+                addFeatureRule(layersArr);
+
                 titleContainerEnter.selectAll('.layers-container-title-content')
                     .text('地图图层：共' + _layerscount.apply(this, arguments) + '个图层');
                 layersItems('');
             });
         }
 
+        // 添加矢量数据过滤rule
+        function addFeatureRule(layersArr) {
+            _forEach(layersArr, function (value) {
+                let conditionSplit = value.condition ? value.condition.split(',') : []
+                    , conditionSplitValue
+                    , conditionSplitTag;
+                if (conditionSplit.length > 1) {
+                    conditionSplitValue = conditionSplit[1];
+                } else {
+                    conditionSplitValue = 'none';
+                }
+                if (conditionSplit.length > 0) {
+                    conditionSplitTag = conditionSplit[0];
+                }
+                context.features().pushRule(value.key, conditionSplitTag, conditionSplitValue);
+            });
+        }
+
         function layersItems(tag) {
             let _layers = _filter(layersArr, function (val) {
-                if (val.title.indexOf(tag) !== -1) {
+                if (val.name.indexOf(tag) !== -1) {
                     return true;
                 } else {
                     return false;
@@ -125,7 +149,7 @@ export function uiLayers(context) {
                 .enter()
                 .append('div')
                 .attr('class', 'layers-container')
-                .call(uiLayersItem(context, _layers));
+                .call(layersitem, _layers);
         }
 
         //  点击esc失去焦点
@@ -139,6 +163,10 @@ export function uiLayers(context) {
             var q = search.property('value');
             layersItems(q);
         }
+
+        layersitem.on('select', function (o) {
+            dispatch.call('switch', this, o);
+        });
     }
     var _layerscount = function () {
         return layersArr.length;
@@ -171,5 +199,5 @@ export function uiLayers(context) {
         return osmKelai.toPromise(osmKelai.getTemplete);
     };
 
-    return layers;
+    return utilRebind(layers, dispatch, 'on');
 }

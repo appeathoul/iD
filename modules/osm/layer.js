@@ -22,6 +22,7 @@ Object.assign(osmLayer.prototype, {
         var attributes = _lay.attributes;
         var json = {
             id: attributes.id.value,
+            key: attributes.key.value,
             name: attributes.name.value,
             title: attributes.name.value,
             type: attributes.type.value,

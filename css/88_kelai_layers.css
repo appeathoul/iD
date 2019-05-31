@@ -18,6 +18,11 @@
   user-select: none;
 }
 
+.layers-items-container .layers-item.active {
+  background-color: #c7d2e1;
+  border: solid 1px #476585;
+}
+
 .layers-items-container .layers-item:hover {
   background-color: #c7d2e1;
   border: solid 1px #476585;

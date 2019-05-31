@@ -77,16 +77,16 @@ export function uiToolUndoRedo(context) {
         var debouncedUpdate = _debounce(update, 500, { leading: true, trailing: true });
 
         context.map()
-            .on('move.undo_redo', debouncedUpdate)
-            .on('drawn.undo_redo', debouncedUpdate);
+            .on('move.undo_redotoolbox', debouncedUpdate)
+            .on('drawn.undo_redotoolbox', debouncedUpdate);
 
         context.history()
-            .on('change.undo_redo', function (difference) {
+            .on('change.undo_redotoolbox', function (difference) {
                 if (difference) update();
             });
 
         context
-            .on('enter.undo_redo', update);
+            .on('enter.undo_redotoolbox', update);
 
 
         function update() {
@@ -110,14 +110,14 @@ export function uiToolUndoRedo(context) {
             .off(commands[1].cmd);
 
         context.map()
-            .on('move.undo_redo', null)
-            .on('drawn.undo_redo', null);
+            .on('move.undo_redotoolbox', null)
+            .on('drawn.undo_redotoolbox', null);
 
         context.history()
-            .on('change.undo_redo', null);
+            .on('change.undo_redotoolbox', null);
 
         context
-            .on('enter.undo_redo', null);
+            .on('enter.undo_redotoolbox', null);
     };
 
     return tool;

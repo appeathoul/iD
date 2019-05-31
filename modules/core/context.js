@@ -145,6 +145,16 @@ export function coreContext() {
         });
         _deferred.add(handle);
     };
+    context.loadTilesByOptions = function(projection, options, callback) {
+        var handle = window.requestIdleCallback(function() {
+            _deferred.delete(handle);
+            if (connection && context.editable()) {
+                var cid = connection.getConnectionId();
+                connection.loadTilesByOptions(projection, options, afterLoad(cid, callback));
+            }
+        });
+        _deferred.add(handle);
+    };
 
     context.loadTileAtLoc = function(loc, callback) {
         var handle = window.requestIdleCallback(function() {

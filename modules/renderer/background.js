@@ -470,7 +470,7 @@ export function rendererBackground(context) {
 
         // Decide which background layer to display
         if (!requested && extent) {
-                best = this.sources(extent).find(function (s) { return s.best(); });
+                best = that.sources(extent).find(function (s) { return s.best(); });
         }
         if (requested && requested.indexOf('custom:') === 0) {
             template = requested.replace(/^custom:/, '');

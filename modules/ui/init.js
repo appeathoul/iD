@@ -87,18 +87,6 @@ export function uiInit(context) {
             .attr('id', 'content')
             .attr('class', 'active');
 
-        // Top toolbar
-        content
-            .append('div')
-            .attr('id', 'bar')
-            .attr('class', 'fillD')
-            .call(uiTopToolbar(context));
-
-        content.append('div')
-            .attr('class', 'map-toolbox')
-            .call(uiToolbox(context));
-
-
         // Map controls
         var controls = content
             .append('div')
@@ -120,6 +108,16 @@ export function uiInit(context) {
                 .attr('dir', 'ltr')
                 .call(map);
             var background = uiBackground(context);
+            // Top toolbar
+            content
+                .append('div')
+                .attr('id', 'bar')
+                .attr('class', 'fillD')
+                .call(uiTopToolbar(context));
+
+            content.append('div')
+                .attr('class', 'map-toolbox')
+                .call(uiToolbox(context));
             controls
                 .append('div')
                 .attr('class', 'map-control background-control')
@@ -261,10 +259,14 @@ export function uiInit(context) {
                     .call(uiShortcuts(context));
             }
 
+            _initCounter++;
+
             if (hash.startWalkthrough) {
                 hash.startWalkthrough = false;
                 context.container().call(uiIntro(context));
             }
+
+            context.enter(modeBrowse(context));
         });
 
 
@@ -319,8 +321,6 @@ export function uiInit(context) {
             .on(['⇧→', uiCmd('⌘→')], pan([-map.dimensions()[0], 0]))
             .on(['⇧↓', uiCmd('⌘↓')], pan([0, -map.dimensions()[1]]));
 
-        context.enter(modeBrowse(context));
-
         var osm = context.connection();
         var auth = uiLoading(context).message(t('loading_auth')).blocking(true);
 
@@ -334,8 +334,6 @@ export function uiInit(context) {
                     auth.close();
                 });
         }
-
-        _initCounter++;
 
         function pan(d) {
             return function () {
