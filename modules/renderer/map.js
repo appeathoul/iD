@@ -125,28 +125,34 @@ export function rendererMap(context) {
 
         context.ui().layers
             .on('switch.map', function (e) {
-                let conditionSplit = e.condition ? e.condition.split(',') : []
-                    , conditionSplitValue
-                    , conditionSplitTag;
-                if (conditionSplit.length > 1) {
-                    conditionSplitValue = conditionSplit[1];
+                if (e){
+                    let conditionSplit = e.condition ? e.condition.split(',') : []
+                        , conditionSplitValue
+                        , conditionSplitTag;
+                    if (conditionSplit.length > 1) {
+                        conditionSplitValue = conditionSplit[1];
+                    } else {
+                        conditionSplitValue = '';
+                    }
+                    if (conditionSplit.length > 0) {
+                        conditionSplitTag = conditionSplit[0];
+                    }
+                    if (conditionSplitTag && conditionSplitValue) {
+                        tileOptions = {
+                            key: conditionSplitTag,
+                            value: conditionSplitValue
+                        };
+                    }
+                    context.minEditableZoom(e.editlevel);
+                    context.features().disableAll();
+                    context.features().enable(e.key);
+                    osm.clearTileCache();
+                    immediateRedraw();
                 } else {
-                    conditionSplitValue = '';
+                    context.minEditableZoom(16);
+                    context.features().disableAll();
+                    immediateRedraw();
                 }
-                if (conditionSplit.length > 0) {
-                    conditionSplitTag = conditionSplit[0];
-                }
-                if (conditionSplitTag && conditionSplitValue) {
-                    tileOptions = {
-                        key: conditionSplitTag,
-                        value: conditionSplitValue
-                    };
-                }
-                context.minEditableZoom(e.editlevel);
-                context.features().disableAll();
-                context.features().enable(e.key);
-                osm.clearTileCache();
-                immediateRedraw();
             });
 
         drawLayers

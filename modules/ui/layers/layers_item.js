@@ -31,12 +31,21 @@ export function uiLayersItem(context) {
             .append('div')
             .attr('class', 'layers-item')
             .on('click.layers', function (o) {
-                var that = this;
-                selection.selectAll('.layers-item')
-                    .classed('active', function (mode, b, c) {
-                        return that === c[b];
-                    });
-                dispatch.call('select', this, o);
+                var active = Boolean(~~d3_select(this).attr('class').indexOf('active') === -1);
+                if (!active) {
+                    selection.selectAll('.layers-item')
+                        .classed('active', function () {
+                            return false;
+                        });
+                    dispatch.call('select', this, null);
+                } else {
+                    var that = this;
+                    selection.selectAll('.layers-item')
+                        .classed('active', function (mode, b, c) {
+                            return that === c[b];
+                        });
+                    dispatch.call('select', this, o);
+                }
             });
         // 添加属性类型图标
         items

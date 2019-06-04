@@ -21,6 +21,7 @@ export function uiLayers(context) {
         layersitem = uiLayersItem(context),
         search,
         osmKelai = context.connectionKelai(),
+        itemSelect = null,
         layersArr = [];
     /**
      * [{
@@ -165,6 +166,7 @@ export function uiLayers(context) {
         }
 
         layersitem.on('select', function (o) {
+            itemSelect = o;
             dispatch.call('switch', this, o);
         });
     }
@@ -181,6 +183,10 @@ export function uiLayers(context) {
         } else {
             return _layerscount;
         }
+    };
+
+    layers.getSelect = function () {
+        return itemSelect;
     };
 
     layers.loadTemplete = function () {

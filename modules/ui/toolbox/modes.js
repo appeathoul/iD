@@ -46,13 +46,37 @@ export function uiToolOldDrawModes(context) {
     ];
 
 
-    function enabled() {
-        return osmEditable();
+    function enabled(d) {
+        return osmEditable(d);
     }
 
-    function osmEditable() {
+    function osmEditable(d) {
         var mode = context.mode();
-        return context.editable() && mode && mode.id !== 'save';
+        var itemSelect = context.ui().layers.getSelect();
+        var geotype = itemSelect && itemSelect.geotype;
+        var typeUse = false;
+        switch (geotype) {
+            case 'Polygon': {
+                if (d.button === 'area') {
+                    typeUse = true;
+                }
+                break;
+            }
+            case 'Line': {
+                if (d.button === 'line') {
+                    typeUse = true;
+                }
+                break;
+            }
+            case 'Point': {
+                if (d.button === 'point') {
+                    typeUse = true;
+                }
+                break;
+            }
+            default: break;
+        }
+        return context.editable() && mode && mode.id !== 'save' && typeUse;
     }
 
     modes.forEach(function (mode) {
@@ -95,6 +119,9 @@ export function uiToolOldDrawModes(context) {
 
         context
             .on('enter.modes', update);
+
+        context.ui().layers
+            .on('switch.modes', debouncedUpdate);
 
         update();
 
