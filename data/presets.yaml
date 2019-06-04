@@ -575,7 +575,7 @@ en:
           clockwise: Clockwise
       direction_vertex:
         # direction=*
-        label: Direction
+        label: Direction Affected
         options:
           # direction=backward
           backward: Backward
@@ -1509,7 +1509,7 @@ en:
         placeholder: Distance to one decimal (123.4)
       railway/signal/direction:
         # 'railway:signal:direction=*'
-        label: Direction
+        label: Direction Affected
         options:
           # 'railway:signal:direction=backward'
           backward: Backward
@@ -2081,7 +2081,7 @@ en:
         label: Traffic Sign
       traffic_sign/direction:
         # 'traffic_sign:direction=*'
-        label: Direction
+        label: Direction Affected
         options:
           # 'traffic_sign:direction=backward'
           backward: Backward
@@ -2094,7 +2094,7 @@ en:
         label: Type
       traffic_signals/direction:
         # 'traffic_signals:direction=*'
-        label: Direction
+        label: Direction Affected
         options:
           # 'traffic_signals:direction=backward'
           backward: Backward
@@ -2143,6 +2143,9 @@ en:
       trees:
         # trees=*
         label: Trees
+      trench:
+        # trench=*
+        label: Type
       trolley_wire:
         # trolley_wire=*
         label: Overhead Trolley Wires
@@ -4971,6 +4974,11 @@ en:
         # leisure=dog_park
         name: Dog Park
         terms: '<translate with synonyms or related terms for ''Dog Park'', separated by commas>'
+      leisure/escape_game:
+        # leisure=escape_game
+        name: Escape Room
+        # 'terms: escape game,escape the room,puzzle room,quest room'
+        terms: '<translate with synonyms or related terms for ''Escape Room'', separated by commas>'
       leisure/firepit:
         # leisure=firepit
         name: Firepit
@@ -5577,6 +5585,11 @@ en:
         name: Telecom Manhole
         # 'terms: cover,phone,hole,telecom,telephone,bt'
         terms: '<translate with synonyms or related terms for ''Telecom Manhole'', separated by commas>'
+      military/trench:
+        # military=trench
+        name: Military Trench
+        # 'terms: dugout,firestep,fox hole,infantry trench,war trench'
+        terms: '<translate with synonyms or related terms for ''Military Trench'', separated by commas>'
       natural:
         # natural=*
         name: Natural

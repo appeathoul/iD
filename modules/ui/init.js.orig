@@ -149,13 +149,6 @@ export function uiInit(context) {
                 .classed('hide', true)
                 .call(ui.photoviewer);
 
-            overMap
-                .append('div')
-                .attr('class', 'sidebar-wrap')
-                .append('div')
-                .attr('id', 'sidebar')
-                .call(ui.sidebar);
-
             // Add attribution and footer
             var about = content
                 .append('div')
@@ -296,6 +289,145 @@ export function uiInit(context) {
             .attr('class', 'spinner')
             .call(uiSpinner(context));
 
+<<<<<<< HEAD
+=======
+        // Add attribution and footer
+        var about = content
+            .append('div')
+            .attr('id', 'about');
+
+        about
+            .append('div')
+            .attr('id', 'attrib')
+            .attr('dir', 'ltr')
+            .call(uiAttribution(context));
+
+        about
+            .append('div')
+            .attr('class', 'api-status')
+            .call(uiStatus(context));
+
+
+        var footer = about
+            .append('div')
+            .attr('id', 'footer')
+            .attr('class', 'fillD');
+
+        footer
+            .append('div')
+            .attr('id', 'flash-wrap')
+            .attr('class', 'footer-hide');
+
+        var footerWrap = footer
+            .append('div')
+            .attr('id', 'footer-wrap')
+            .attr('class', 'footer-show');
+
+        footerWrap
+            .append('div')
+            .attr('id', 'scale-block')
+            .call(uiScale(context));
+
+        var aboutList = footerWrap
+            .append('div')
+            .attr('id', 'info-block')
+            .append('ul')
+            .attr('id', 'about-list');
+
+        if (!context.embed()) {
+            aboutList
+                .call(uiAccount(context));
+        }
+
+        aboutList
+            .append('li')
+            .attr('class', 'version')
+            .call(uiVersion(context));
+
+        var issueLinks = aboutList
+            .append('li');
+
+        issueLinks
+            .append('a')
+            .attr('target', '_blank')
+            .attr('tabindex', -1)
+            .attr('href', 'https://github.com/openstreetmap/iD/issues')
+            .call(svgIcon('#iD-icon-bug', 'light'))
+            .call(tooltip().title(t('report_a_bug')).placement('top'));
+
+        issueLinks
+            .append('a')
+            .attr('target', '_blank')
+            .attr('tabindex', -1)
+            .attr('href', 'https://github.com/openstreetmap/iD/blob/master/CONTRIBUTING.md#translating')
+            .call(svgIcon('#iD-icon-translate', 'light'))
+            .call(tooltip().title(t('help_translate')).placement('top'));
+
+        aboutList
+            .append('li')
+            .attr('class', 'feature-warning')
+            .attr('tabindex', -1)
+            .call(uiFeatureInfo(context));
+
+        aboutList
+            .append('li')
+            .attr('class', 'user-list')
+            .attr('tabindex', -1)
+            .call(uiContributors(context));
+
+
+        // Setup map dimensions and move map to initial center/zoom.
+        // This should happen after #content and toolbars exist.
+        ui.onResize();
+        map.redrawEnable(true);
+
+        var hash = behaviorHash(context);
+        hash();
+        if (!hash.hadHash) {
+            map.centerZoom([0, 0], 2);
+        }
+
+
+        var overMap = content
+            .append('div')
+            .attr('class', 'over-map');
+
+        // Add panes
+        // This should happen after map is initialized, as some require surface()
+        var panes = overMap
+            .append('div')
+            .attr('class', 'map-panes');
+
+        panes
+            .call(background.renderPane)
+            .call(mapData.renderPane)
+            .call(issues.renderPane)
+            .call(help.renderPane);
+
+        // Add absolutely-positioned elements that sit on top of the map
+        // This should happen after the map is ready (center/zoom)
+        overMap
+            .call(uiMapInMap(context))
+            .call(uiInfo(context))
+            .call(uiNotice(context));
+
+
+        overMap
+            .append('div')
+            .attr('id', 'photoviewer')
+            .classed('al', true)       // 'al'=left,  'ar'=right
+            .classed('hide', true)
+            .call(ui.photoviewer);
+
+        overMap
+            .append('div')
+            .attr('class', 'sidebar-wrap')
+            .append('div')
+            .attr('id', 'sidebar')
+            .call(ui.sidebar);
+
+
+>>>>>>> upstream/master
         // Bind events
         window.onbeforeunload = function () {
             return context.save();
@@ -484,7 +616,7 @@ export function uiInit(context) {
                 .transition()
                 .duration(200)
                 .style(side, '-500px')
-                .on('end', function () {
+                .on('end', function() {
                     d3_select(this).classed('hide', true);
                 });
         }

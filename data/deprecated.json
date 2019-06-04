@@ -230,23 +230,23 @@
     },
     {
       "old": {"cuisine": "gluten-free"},
-      "replace": {"diet:gluten_free": "yes"}
+      "replace": {"diet:gluten_free": "*"}
     },
     {
       "old": {"cuisine": "halal"},
-      "replace": {"diet:halal": "yes"}
+      "replace": {"diet:halal": "*"}
     },
     {
       "old": {"cuisine": "kosher"},
-      "replace": {"diet:kosher": "yes"}
+      "replace": {"diet:kosher": "*"}
     },
     {
       "old": {"cuisine": "vegan"},
-      "replace": {"diet:vegan": "yes"}
+      "replace": {"diet:vegan": "*"}
     },
     {
       "old": {"cuisine": "vegetarian"},
-      "replace": {"diet:vegetarian": "yes"}
+      "replace": {"diet:vegetarian": "*"}
     },
     {
       "old": {"curb": "*"},
@@ -295,6 +295,10 @@
     {
       "old": {"fenced": "yes"},
       "replace": {"barrier": "fence"}
+    },
+    {
+      "old": {"FIXME": "*"},
+      "replace": {"fixme": "$1"}
     },
     {
       "old": {"footway": "both"},
@@ -526,6 +530,10 @@
     {
       "old": {"nosquare": "*"},
       "replace": {"nonsquare": "$1"}
+    },
+    {
+      "old": {"office": "administrative"},
+      "replace": {"office": "government"}
     },
     {
       "old": {"office": "real_estate"},
@@ -772,6 +780,22 @@
     {
       "old": {"sport": "shuffle_board"},
       "replace": {"sport": "shuffleboard"}
+    },
+    {
+      "old": {"sustenance": "bar"},
+      "replace": {"amenity": "bar"}
+    },
+    {
+      "old": {"sustenance": "cafe"},
+      "replace": {"amenity": "cafe"}
+    },
+    {
+      "old": {"sustenance": "pub"},
+      "replace": {"amenity": "pub"}
+    },
+    {
+      "old": {"sustenance": "restaurant"},
+      "replace": {"amenity": "restaurant"}
     },
     {
       "old": {"theatre:type": "amphitheatre"},

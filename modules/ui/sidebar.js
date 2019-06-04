@@ -1,6 +1,4 @@
 import _throttle from 'lodash-es/throttle';
-import _debounce from 'lodash-es/debounce';
-
 
 import { drag as d3_drag } from 'd3-drag';
 import { interpolateNumber as d3_interpolateNumber } from 'd3-interpolate';
@@ -48,28 +46,18 @@ export function uiSidebar(context) {
         // Set the initial width constraints
         selection
             .style('min-width', minWidth + 'px')
-            .style('max-width', '400px')
-            .style('width', '340px');
-        // .style('width', '33.3333%');
+            .style('width', '350px');
 
         resizer.call(d3_drag()
             .container(container.node())
-            .on('start', function () {
+            .on('start', function() {
                 // offset from edge of sidebar-resizer
                 dragOffset = d3_event.sourceEvent.offsetX - 1;
 
-                sidebarWidth = selection.node().getBoundingClientRect().width;
-                containerWidth = container.node().getBoundingClientRect().width;
-                var widthPct = (sidebarWidth / containerWidth) * 100;
-                selection
-                    .style('width', widthPct + '%')    // lock in current width
-                    .style('max-width', '85%');        // but allow larger widths
-
                 resizer.classed('dragging', true);
             })
-            .on('drag', function () {
+            .on('drag', function() {
                 var isRTL = (textDirection === 'rtl');
-                var scaleX = isRTL ? 0 : 1;
                 var xMarginProperty = isRTL ? 'margin-right' : 'margin-left';
 
                 var x = d3_event.x - dragOffset;
@@ -83,26 +71,17 @@ export function uiSidebar(context) {
                 if (shouldCollapse) {
                     if (!isCollapsed) {
                         selection
-                            .style(xMarginProperty, '-400px')
+                            .style(xMarginProperty, '-410px')
                             .style('width', '400px');
-
-                        context.ui().onResize([(sidebarWidth - d3_event.dx) * scaleX, 0]);
                     }
 
                 } else {
-                    var widthPct = (sidebarWidth / containerWidth) * 100;
                     selection
                         .style(xMarginProperty, null)
-                        .style('width', widthPct + '%');
-
-                    if (isCollapsed) {
-                        context.ui().onResize([-sidebarWidth * scaleX, 0]);
-                    } else {
-                        context.ui().onResize([-d3_event.dx * scaleX, 0]);
-                    }
+                        .style('width', sidebarWidth + 'px');
                 }
             })
-            .on('end', function () {
+            .on('end', function() {
                 resizer.classed('dragging', false);
             })
         );
@@ -154,7 +133,7 @@ export function uiSidebar(context) {
                 var errEditor = (datum.service === 'keepRight') ? keepRightEditor : improveOsmEditor;
 
                 d3_selectAll('.qa_error.' + datum.service)
-                    .classed('hover', function (d) { return d.id === datum.id; });
+                    .classed('hover', function(d) { return d.id === datum.id; });
 
                 sidebar
                     .show(errEditor.error(datum));
@@ -200,7 +179,7 @@ export function uiSidebar(context) {
         sidebar.hover = _throttle(hover, 200);
 
 
-        sidebar.intersects = function (extent) {
+        sidebar.intersects = function(extent) {
             var rect = selection.node().getBoundingClientRect();
             return extent.intersects([
                 context.projection.invert([0, rect.height]),
@@ -209,7 +188,7 @@ export function uiSidebar(context) {
         };
 
 
-        sidebar.select = function (id, newFeature) {
+        sidebar.select = function(id, newFeature) {
             sidebar.hide();
 
             if (id) {
@@ -241,7 +220,7 @@ export function uiSidebar(context) {
                         .call(inspector, newFeature);
                 }
 
-                sidebar.showPresetList = function () {
+                sidebar.showPresetList = function() {
                     inspector.showList(context.presets().match(entity, context.graph()));
                 };
 
@@ -252,7 +231,7 @@ export function uiSidebar(context) {
         };
 
 
-        sidebar.show = function (component, element) {
+        sidebar.show = function(component, element) {
             featureListWrap
                 .classed('inspector-hidden', true);
             inspectorWrap
@@ -266,7 +245,7 @@ export function uiSidebar(context) {
         };
 
 
-        sidebar.hide = function () {
+        sidebar.hide = function() {
             featureListWrap
                 .classed('inspector-hidden', false);
             inspectorWrap
@@ -277,21 +256,21 @@ export function uiSidebar(context) {
         };
 
 
-        sidebar.expand = function (moveMap) {
+        sidebar.expand = function() {
             if (selection.classed('collapsed')) {
-                sidebar.toggle(moveMap);
+                sidebar.toggle();
             }
         };
 
 
-        sidebar.collapse = function (moveMap) {
+        sidebar.collapse = function() {
             if (!selection.classed('collapsed')) {
-                sidebar.toggle(moveMap);
+                sidebar.toggle();
             }
         };
 
 
-        sidebar.toggle = function (moveMap) {
+        sidebar.toggle = function() {
             var e = d3_event;
             if (e && e.sourceEvent) {
                 e.sourceEvent.preventDefault();
@@ -305,59 +284,34 @@ export function uiSidebar(context) {
             var isCollapsed = selection.classed('collapsed');
             var isCollapsing = !isCollapsed;
             var isRTL = (textDirection === 'rtl');
-            var scaleX = isRTL ? 0 : 1;
             var xMarginProperty = isRTL ? 'margin-right' : 'margin-left';
 
             sidebarWidth = selection.node().getBoundingClientRect().width;
 
-            // switch from % to px
-            selection.style('width', sidebarWidth + 'px');
-
             var startMargin, endMargin, lastMargin;
             if (isCollapsing) {
                 startMargin = lastMargin = 0;
-                // endMargin = -sidebarWidth
-                endMargin = -200;
+                endMargin = -sidebarWidth - 10;
             } else {
-                // startMargin = lastMargin = -sidebarWidth
-                startMargin = lastMargin = -200;
+                startMargin = lastMargin = -sidebarWidth;
                 endMargin = 0;
             }
 
-            var resizeFun = _debounce(function () {
-                var move;
-                if (isCollapsing) {
-                    move = -endMargin;
-                } else {
-                    move = startMargin;
-                }
-                context.ui().onResize(moveMap ? undefined : [move * scaleX, 0]);
-            }, 100);
-
-
             selection.transition()
                 .style(xMarginProperty, endMargin + 'px')
-                .tween('panner', function () {
+                .tween('panner', function() {
                     var i = d3_interpolateNumber(startMargin, endMargin);
-                    return function (t) {
+                    return function(t) {
                         var dx = lastMargin - Math.round(i(t));
                         lastMargin = lastMargin - dx;
-                        // 这里修改一下，动画完成后再执行resize方法
-                        resizeFun();
-                        // context.ui().onResize(moveMap ? undefined : [dx * scaleX, 0]);
-
                     };
                 })
-                .on('end', function () {
+                .on('end', function() {
                     selection.classed('collapsed', isCollapsing);
 
-                    // switch back from px to %
                     if (!isCollapsing) {
-                        var containerWidth = container.node().getBoundingClientRect().width;
-                        var widthPct = (sidebarWidth / containerWidth) * 100;
                         selection
-                            .style(xMarginProperty, null)
-                            .style('width', widthPct + '%');
+                            .style(xMarginProperty, null);
                     }
                 });
         };
@@ -366,16 +320,16 @@ export function uiSidebar(context) {
         resizer.on('dblclick', sidebar.toggle);
     }
 
-    sidebar.showPresetList = function () { };
-    sidebar.hover = function () { };
-    sidebar.hover.cancel = function () { };
-    sidebar.intersects = function () { };
-    sidebar.select = function () { };
-    sidebar.show = function () { };
-    sidebar.hide = function () { };
-    sidebar.expand = function () { };
-    sidebar.collapse = function () { };
-    sidebar.toggle = function () { };
+    sidebar.showPresetList = function() {};
+    sidebar.hover = function() {};
+    sidebar.hover.cancel = function() {};
+    sidebar.intersects = function() {};
+    sidebar.select = function() {};
+    sidebar.show = function() {};
+    sidebar.hide = function() {};
+    sidebar.expand = function() {};
+    sidebar.collapse = function() {};
+    sidebar.toggle = function() {};
 
     return sidebar;
 }
