@@ -160,3 +160,32 @@
 .spinner {
   z-index: 9;
 }
+
+.inspector-body {
+  overflow: auto;
+}
+
+.inspector-wrap .footer {
+  display: none;
+}
+
+.pane {
+  bottom: 0px;
+}
+
+.entity-editor-pane .preset-list-item {
+  display: none;
+}
+
+.spinner {
+  bottom: 34px;
+  font-size: 0px;
+}
+
+.spinner span {
+  font-size: 12px;
+  vertical-align: baseline;
+}
+.spinner img {
+  vertical-align: baseline;
+}
