@@ -156,3 +156,7 @@
   stroke: #fff;
   stroke-width: 2;
 }
+
+.spinner {
+  z-index: 9;
+}
