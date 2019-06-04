@@ -47,7 +47,7 @@
 
 #toolbox-wrapper {
   min-height: 400px;
-  overflow: auto;
+  /* overflow: auto; */
 }
 
 #toolbox-wrapper .toolbox_controls {
@@ -96,4 +96,56 @@
 
 #toolbox-wrapper .toolbox_flex button.bar-button.active {
   background-color: #d7e0ed;
+}
+
+#toolbox_maptool {
+  margin-top: 8px;
+}
+
+#toolbox_maptool .toolbox-controls-normal {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+}
+
+#toolbox_maptool .toolbox-controls-normal button {
+  width: 50px;
+  height: 24px;
+  color: #4b6887;
+  background-color: rgba(244, 247, 251, 0.8);
+  border: solid 1px #90a0af;
+  opacity: 0.8;
+}
+
+#toolbox_maptool .toolbox-controls-normal .icon.light {
+  color: #4b6887;
+}
+
+#toolbox-wrapper .toolbox_bottom {
+  position: absolute;
+  bottom: 0px;
+  height: 40px;
+  border-top: 1px solid #c7d2e1;
+  /* z-index: 99999999; */
+  width: 100%;
+}
+
+#toolbox-wrapper .toolbox_bottom .toolbox-mapzoom {
+  line-height: 40px;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  letter-spacing: 0px;
+  color: #476585;
+}
+
+#toolbox-wrapper .toolbox_bottom .zoom {
+  float: left;
+  margin-left: 10px;
+}
+
+#toolbox-wrapper .toolbox_bottom .center {
+  float: right;
+  margin-right: 10px;
 }

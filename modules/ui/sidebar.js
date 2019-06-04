@@ -316,9 +316,11 @@ export function uiSidebar(context) {
             var startMargin, endMargin, lastMargin;
             if (isCollapsing) {
                 startMargin = lastMargin = 0;
-                endMargin = -sidebarWidth;
+                // endMargin = -sidebarWidth
+                endMargin = -200;
             } else {
-                startMargin = lastMargin = -sidebarWidth;
+                // startMargin = lastMargin = -sidebarWidth
+                startMargin = lastMargin = -200;
                 endMargin = 0;
             }
 

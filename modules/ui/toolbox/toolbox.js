@@ -6,7 +6,7 @@ import {
 import { utilFunctor } from '../../util/index';
 import { svgIcon } from '../../svg';
 import _debounce from 'lodash-es/debounce';
-import { uiToolSave, uiToolUndoRedo, uiMapControls } from './index';
+import { uiToolSave, uiToolUndoRedo, uiMapControls, uiMapTools, uiCenterZoom } from './index';
 
 export function uiToolbox(context) {
     var wrap = d3_select(null);
@@ -16,7 +16,9 @@ export function uiToolbox(context) {
         toolboxWrapper;
     var undoRedo = uiToolUndoRedo(context),
         save = uiToolSave(context),
-        mapControls = uiMapControls(context);
+        mapControls = uiMapControls(context),
+        mapTools = uiMapTools(context),
+        centerZoom = uiCenterZoom(context);
 
     function toolbox(selection) {
         var that = this;
@@ -140,6 +142,16 @@ export function uiToolbox(context) {
             .attr('id', 'toolbox_controls')
             .attr('class', 'toolbox_controls toolbox_flex')
             .call(mapControls);
+        this.toolboxCenterZoom = toolboxWrapper
+            .append('div')
+            .attr('id', 'toolbox_bottom')
+            .attr('class', 'toolbox_bottom')
+            .call(centerZoom);
+        this.toolboxMaptool = selection
+            .append('div')
+            .attr('id', 'toolbox_maptool')
+            .attr('class', 'toolbox_maptool')
+            .call(mapTools);
         // toolboxHeader.append('div')
         //     .attr('class', 'toolbox-close')
         //     .call(svgIcon('#iD-icon-close', 'inline'));

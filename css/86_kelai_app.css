@@ -65,6 +65,30 @@
   visibility: hidden;
 }
 
+.map-control.zoombuttons {
+  display: none;
+}
+
+.map-control.help-control {
+  display: none;
+}
+
+.map-control.geolocate-control {
+  display: none;
+}
+
+.map-control.map-data-control {
+  display: none;
+}
+
+.map-control.background-control {
+  display: none;
+}
+
+.notice .zoom-to {
+  z-index: 10;
+}
+
 .map-toolbox {
   position: absolute;
   right: 50px;

@@ -34,7 +34,8 @@ Object.assign(osmLayer.prototype, {
             refer: attributes.refer.value,
             status: attributes.status.value,
             condition: attributes.condition.value,
-            editlevel: attributes.editlevel.value
+            // eslint-disable-next-line radix
+            editlevel: parseInt(attributes.editlevel.value) > 20 ? 20 : parseInt(attributes.editlevel.value)
         };
         // 设置类型图片
         if (json.geotype === 'Polygon') {

@@ -39,6 +39,10 @@ export function uiNotice(context) {
         context.map()
             .on('move.notice', _debounce(disableTooHigh, 500));
 
+        context.ui().layers
+            .on('switch.notice', function (e) {
+                disableTooHigh();
+            });
         disableTooHigh();
     };
 }

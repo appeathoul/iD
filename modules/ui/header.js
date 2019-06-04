@@ -6,6 +6,7 @@ import { svgIcon } from '../svg';
 import { tooltip } from '../util/tooltip.kelai';
 import { uiTooltipHeaderHtml } from './tooltipHeaderHtml';
 import { defaultUserIcon } from '../util/default_user';
+import { uiShortcuts } from './shortcuts';
 
 import {
     select as d3_select,
@@ -100,6 +101,12 @@ export function uiHeader(context) {
                     this.iconContent = d.icon;
                     svgIcon('#' + this.iconContent, 'inline')(d3_select(this));
                 });
+            }).on('click', function (o) {
+                var that = this;
+                switch (o.id) {
+                    case 'help': context.container().call(uiShortcuts(context), true); break;
+                    default: break;
+                }
             });
         initMenu(headerTools);
     }
