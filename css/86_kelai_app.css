@@ -37,6 +37,11 @@
   overflow: hidden;
   line-height: 44px;
   color: #23374d;
+  padding: 0px;
+}
+
+#sidebar .search-header .icon {
+  top: 65px;
 }
 
 #footer {
