@@ -121,7 +121,51 @@ export function uiToolOldDrawModes(context) {
             .on('enter.modes', update);
 
         context.ui().layers
-            .on('switch.modes', debouncedUpdate);
+            .on('switch.modes', function (d) {
+                if (d) {
+                    var preset = context.presets().item(d.regionCode);
+                    let conditionSplit = d.condition ? d.condition.split(',') : []
+                        , conditionSplitValue
+                        , conditionSplitTag;
+                    if (conditionSplit.length > 1) {
+                        conditionSplitValue = conditionSplit[1];
+                    } else {
+                        conditionSplitValue = '';
+                    }
+                    if (conditionSplit.length > 0) {
+                        conditionSplitTag = conditionSplit[0];
+                    }
+                    if (conditionSplitTag && conditionSplitValue) {
+                        preset.tags[conditionSplitTag] = conditionSplitValue;
+                    }
+                    if (d.geotype === 'Point') {
+                        modes[0] = modeAddPoint(context, {
+                            title: t('modes.add_point.title'),
+                            button: 'point',
+                            description: t('modes.add_point.description'),
+                            preset: preset ? preset : context.presets().item('point'),
+                            key: '1'
+                        });
+                    } else if (d.geotype === 'Line') {
+                        modes[1] = modeAddLine(context, {
+                            title: t('modes.add_line.title'),
+                            button: 'line',
+                            description: t('modes.add_line.description'),
+                            preset: preset ? preset : context.presets().item('line'),
+                            key: '2'
+                        });
+                    } else if (d.geotype === 'Polygon') {
+                        modes[2] = modeAddArea(context, {
+                            title: t('modes.add_area.title'),
+                            button: 'area',
+                            description: t('modes.add_area.description'),
+                            preset: preset ? preset : context.presets().item('area'),
+                            key: '3'
+                        });
+                    }
+                }
+                debouncedUpdate();
+            });
 
         update();
 
