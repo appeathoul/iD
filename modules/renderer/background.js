@@ -12,6 +12,7 @@ import { utilQsString, utilStringQs } from '../util';
 import { utilDetect } from '../util/detect';
 import { utilRebind } from '../util/rebind';
 import co from 'co';
+import _pull from 'lodash-es/pull';
 
 
 export function rendererBackground(context) {
@@ -316,6 +317,7 @@ export function rendererBackground(context) {
 
 
     background.toggleOverlayLayer = function(d) {
+
         var layer;
         for (var i = 0; i < _overlayLayers.length; i++) {
             layer = _overlayLayers[i];
@@ -496,6 +498,10 @@ export function rendererBackground(context) {
         }
 
         var overlays = (q.overlays || '').split(',');
+        for (var n = 0; n < _overlayLayers.length; n++) {
+            var _overlaylayer = _overlayLayers[n];
+            overlays = _pull(overlays,_overlaylayer.source().id);
+        }
         overlays.forEach(function(overlay) {
             overlay = background.findSource(overlay);
             if (overlay) {
