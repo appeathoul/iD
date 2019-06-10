@@ -53,7 +53,26 @@
                 "add_area": "Click or tap any corner of the feature.",
                 "draw_area": "Trace the feature's outline."
             },
-            "global_location": "Planet Earth"
+            "global_location": "Planet Earth",
+            "greetings": {
+                "morning": "Good Morning",
+                "afternoon": "Good Afternoon",
+                "evening": "Good Evening",
+                "night": "Good Evening"
+            },
+            "welcome": {
+                "first_time": "You’re editing <b>OpenStreetMap</b>: the free, collborative world map.<br/>If this is your first time here, consider taking the <a>quick-start tutorial</a>.<br/>Thanks for contributing. Have fun!",
+                "return": "Welcome back. Ready to make the map even better?"
+            },
+            "restore": {
+                "title": "Restore",
+                "discard": "Discard",
+                "info": {
+                    "count_loc": "You have {count} unsaved changes around {location}.",
+                    "count_loc_time": "You have {count} unsaved changes from {duration} ago around {location}."
+                },
+                "ask": "Would you like to restore them?"
+            }
         },
         "modes": {
             "add_feature": {
@@ -903,12 +922,6 @@
                 }
             }
         },
-        "restore": {
-            "heading": "You have unsaved changes",
-            "description": "Do you wish to restore unsaved changes from a previous editing session?",
-            "restore": "Restore my changes",
-            "reset": "Discard my changes"
-        },
         "save": {
             "title": "Save",
             "help": "Review your changes and upload them to OpenStreetMap, making them visible to other users.",
@@ -967,10 +980,7 @@
             "cancel": "Cancel"
         },
         "splash": {
-            "welcome": "Welcome to the iD OpenStreetMap editor",
-            "text": "iD is a friendly but powerful tool for contributing to the world's best free world map. This is version {version}. For more information see {website} and report bugs at {github}.",
-            "walkthrough": "Start the Walkthrough",
-            "start": "Edit now"
+            "walkthrough": "Start the Walkthrough"
         },
         "source_switch": {
             "live": "live",
@@ -1778,6 +1788,20 @@
                     "reference": "Google products are proprietary and must not be used as references."
                 }
             },
+            "invalid_format": {
+                "title": "Invalid Formatting",
+                "tip": "Find tags with unexpected formats",
+                "email": {
+                    "message": "{feature} has an invalid email address.",
+                    "message_multi": "{feature} has multiple invalid email addresses.",
+                    "reference": "Email addresses must look like \"user@example.com\"."
+                },
+                "website": {
+                    "message": "{feature} has an invalid website.",
+                    "message_multi": "{feature} has multiple invalid websites.",
+                    "reference": "Websites should start with \"http\" or \"https\"."
+                }
+            },
             "missing_role": {
                 "title": "Missing Roles",
                 "message": "{member} has no role within {relation}",
@@ -2376,7 +2400,15 @@
             "east": "E",
             "west": "W",
             "coordinate": "{coordinate}{direction}",
-            "coordinate_pair": "{latitude}, {longitude}"
+            "coordinate_pair": "{latitude}, {longitude}",
+            "second": "1 second",
+            "seconds": "{quantity} seconds",
+            "minute": "1 minute",
+            "minutes": "{quantity} minutes",
+            "hour": "1 hour",
+            "hours": "{quantity} hours",
+            "day": "1 day",
+            "days": "{quantity} days"
         },
         "wikidata": {
             "identifier": "Identifier",
@@ -7476,6 +7508,10 @@
                     "name": "Nonprofit Organization Office",
                     "terms": "association,non-profit,nonprofit,organization,society"
                 },
+                "office/bail_bond_agent": {
+                    "name": "Bail Bond Agent",
+                    "terms": "bail bond dealer,bail bond man,bail bondsman,bail bondsperson"
+                },
                 "office/charity": {
                     "name": "Charity Office",
                     "terms": "charitable organization"
@@ -8523,6 +8559,10 @@
                 "shop/medical_supply": {
                     "name": "Medical Supply Store",
                     "terms": ""
+                },
+                "shop/military_surplus": {
+                    "name": "Military Surplus Store",
+                    "terms": "armor,army-navy store,army surplus,navy surplus,tactical gear,war surplus shop,weapons"
                 },
                 "shop/mobile_phone": {
                     "name": "Mobile Phone Store",

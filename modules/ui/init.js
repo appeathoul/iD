@@ -29,7 +29,6 @@ import { uiMapData } from './map_data';
 import { uiMapInMap } from './map_in_map';
 import { uiNotice } from './notice';
 import { uiPhotoviewer } from './photoviewer';
-import { uiRestore } from './restore';
 import { uiScale } from './scale';
 import { uiShortcuts } from './shortcuts';
 import { uiHeader } from './header';
@@ -37,7 +36,6 @@ import { uiLayers } from './layers/layers';
 import { uiToolbox } from './toolbox/toolbox';
 import { uiSidebar } from './sidebar';
 import { uiSpinner } from './spinner';
-import { uiSplash } from './splash';
 import { uiStatus } from './status';
 import { uiTopToolbar } from './top_toolbar';
 import { uiVersion } from './version';
@@ -257,13 +255,8 @@ export function uiInit(context) {
                 map.centerZoom([0, 0], 2);
             }
 
+            context.enter(modeBrowse(context));
             if (!_initCounter++) {
-                if (!hash.startWalkthrough) {
-                    context.container()
-                        .call(uiSplash(context))
-                        .call(uiRestore(context));
-                }
-
                 context.container()
                     .call(uiShortcuts(context));
             }
@@ -274,8 +267,6 @@ export function uiInit(context) {
                 hash.startWalkthrough = false;
                 context.container().call(uiIntro(context));
             }
-
-            context.enter(modeBrowse(context));
         });
 
 

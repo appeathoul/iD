@@ -304,6 +304,10 @@ export function rendererBackground(context) {
         background.baseLayerSource(background.findSource('Bing'));
     };
 
+    background.tianditu = function() {
+        background.baseLayerSource(background.findSource('TianDiTu Vector'));
+    };
+
 
     background.showsLayer = function(d) {
         return d.id === baseLayer.source().id ||

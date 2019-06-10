@@ -350,6 +350,23 @@ button:hover {
 button.active {
   background: #7092ff;
 }
+button.primary {
+    color: #fff;
+    background: #7092ff;
+}
+button.secondary {
+    color: #7092ff;
+    background: transparent;
+    border: 1px solid #7092ff;
+}
+button.secondary:hover {
+    color: #fff;
+    background: #7092ff;
+}
+button.destructive {
+    background: #d32232;
+    color: #fff;
+}
 button.disabled {
   background-color: rgba(255, 255, 255, 0.25);
   color: rgba(0, 0, 0, 0.4);
@@ -861,9 +878,10 @@ button.add-preset.disabled .preset-icon-container {
 /* Header for modals / panes
 ------------------------------------------------------- */
 .header {
-  border-bottom: 1px solid #ccc;
-  height: 60px;
-  position: relative;
+    border-bottom: 1px solid #ccc;
+    height: 60px;
+    position: relative;
+    flex: 0 0 auto;
 }
 
 .header h3 {
@@ -1010,22 +1028,28 @@ a.hide-toggle {
 /* Assistant
 ------------------------------------------------------- */
 .assistant {
-  flex: 0 0 auto;
-  background: rgba(32, 29, 29, 0.9);
-  color: #fff;
-  border-radius: 4px;
-  padding: 10px;
-  display: flex;
-  margin-bottom: 10px;
-  max-width: 350px;
-  line-height: 1.35em;
+    flex: 0 0 auto;
+    background: rgba(32, 29, 29, 0.9);
+    color: #fff;
+    border-radius: 4px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    max-width: 350px;
+    max-height: 100%;
+    line-height: 1.35em;
 
-  -webkit-box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.5);
-  box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.5);
+    box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.5);
 
-  -webkit-backdrop-filter: blur(2.5px);
-  backdrop-filter: blur(2.5px);
+    -webkit-backdrop-filter: blur(2.5px);
+    backdrop-filter: blur(2.5px);
+}
+.assistant .assistant-header {
+    display: flex;
+    flex: 0 0 auto;
 }
 .assistant .icon-col {
   flex: 0 0 auto;
@@ -1051,9 +1075,123 @@ a.hide-toggle {
   color: #ccc;
   margin-top: 6px;
 }
-.assistant .body-text:empty {
-  display: none;
+.assistant .body-text:empty,
+.assistant .main-footer:empty,
+.assistant .assistant-body:empty {
+    display: none;
 }
+.assistant b {
+    font-weight: bold;
+}
+.assistant br {
+    display: block;
+    margin-top: 10px;
+    content: " ";
+}
+.assistant .main-footer {
+    margin-top: 12px;
+}
+.assistant button.geocode-item,
+.assistant .main-footer button {
+    min-width: 100px;
+    height: auto;
+    padding: 5px 2px;
+    line-height: 20px;
+    font-size: 13px;
+}
+[dir='ltr'] .assistant .main-footer button:first-of-type {
+    margin-right: 8px;
+}
+[dir='rtl'] .assistant .main-footer button:first-of-type {
+    margin-left: 8px;
+}
+
+.assistant .assistant-body {
+    margin-top: 15px;
+    padding: 0 5px;
+    display: flex;
+}
+.assistant .search-header {
+    position: relative;
+}
+.assistant .search-header .icon {
+    position: absolute;
+    left: 7px;
+    top: 5px;
+    pointer-events: none;
+    opacity: 0.75;
+}
+[dir='rtl'] .assistant .search-header .icon {
+    left: auto;
+    right: 7px;
+}
+
+.assistant input[type='search'] {
+    height: 30px;
+    width: 100%;
+    padding: 5px 10px;
+    border-radius: 15px;
+    border-width: 0;
+    text-indent: 25px;
+    font-size: 12px;
+    background: rgba(18, 18, 18, 0.97);
+    color: #fff;
+    min-width: 225px;
+}
+.assistant .no-results-item,
+.assistant .feature-list-item {
+    width: 100%;
+    background: transparent;
+    border-bottom: 1px solid #444;
+    color: #fff;
+}
+.assistant .feature-list-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+.assistant .feature-list > *:nth-last-child(2) {
+    border-bottom: none;
+}
+[dir='ltr'] .assistant .feature-list-item .label {
+    padding-left: 8px;
+}
+[dir='rtl'] .assistant .feature-list-item .label {
+    padding-right: 8px;
+}
+.assistant .feature-list-item .icon {
+    margin-right: 8px;
+}
+
+.assistant .geocode-item {
+    width: 50%;
+    margin-top: 5px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 10px;
+}
+
+.assistant.prominent {
+    padding-bottom: 16px;
+}
+.assistant.prominent .icon-col .icon {
+    width: 40px;
+    height: 40px;
+    color: #FFCF4A;
+}
+.assistant.prominent .mode-label {
+    display: none;
+}
+.assistant.prominent .subject-title {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 20px;
+    margin-top: 6px;
+}
+.assistant.prominent .body-text {
+    font-size: 14px;
+    margin-top: 10px;
+    line-height: 1.35em;
+}
+
 
 /* Sidebar / Inspector
 ------------------------------------------------------- */
@@ -1068,27 +1206,27 @@ a.hide-toggle {
   display: flex;
   flex-direction: column;
 }
+[dir='rtl'] .sidebar-wrap {
+    padding-left: auto;
+    padding-right: 10px;
+}
 .sidebar-wrap > * {
   pointer-events: auto;
 }
+
 #sidebar {
-  position: relative;
-  height: 100%;
-  z-index: 10;
-  background: rgba(246, 246, 246, 0.98);
-  -ms-user-select: element;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  -webkit-backdrop-filter: blur(1.5px);
-  backdrop-filter: blur(1.5px);
-  -webkit-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.29);
-  -moz-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.29);
-  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.29);
-  overflow: hidden;
-}
-[dir="rtl"] .sidebar-wrap {
-  padding-left: auto;
-  padding-right: 10px;
+    position: relative;
+    max-height: 100%;
+    z-index: 10;
+    background: rgba(246, 246, 246, 0.98);
+    -ms-user-select: element;
+    border-radius: 6px;
+    -webkit-backdrop-filter: blur(1.5px);
+    backdrop-filter: blur(1.5px);
+    -webkit-box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.29);
+    -moz-box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.29);
+    box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.29);
+    display: flex;
 }
 
 #sidebar-resizer {
@@ -1114,26 +1252,24 @@ a.hide-toggle {
 }
 
 .sidebar-component {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+    border: 1px solid #ccc;
 }
 
 .sidebar-component .body {
-  width: 100%;
-  overflow: auto;
-  top: 60px;
-  bottom: 0;
-  position: absolute;
+    width: 100%;
+    overflow: auto;
 }
 
 .entity-editor-pane {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    border-radius: inherit;
 }
 .entity-editor-pane .footer {
   position: relative;
@@ -1150,9 +1286,10 @@ a.hide-toggle {
   height: 100%;
 }
 
-.feature-list-pane .inspector-body,
-.preset-list-pane .inspector-body {
-  top: 120px;
+.feature-list-pane {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 .selection-list-pane .inspector-body {
   top: 60px;
@@ -1192,31 +1329,12 @@ a.hide-toggle {
 .feature-list {
   width: 100%;
 }
-.no-results-item,
-.geocode-item,
 .feature-list-item {
   width: 100%;
   position: relative;
   border-bottom: 1px solid #ccc;
   border-radius: 0;
 }
-
-.geocode-item {
-  width: 50%;
-  background-color: #ccc;
-  left: 25%;
-  margin-top: 30px;
-  border-radius: 2px;
-}
-
-[dir="rtl"] .geocode-item {
-  left: -25%;
-}
-
-.geocode-item:hover {
-  background-color: #aaa;
-}
-
 .feature-list-item {
   background-color: #fff;
   font-weight: bold;
@@ -1230,19 +1348,18 @@ a.hide-toggle {
   background: transparent;
 }
 .feature-list-item .label {
-  text-align: left;
-  padding: 10px 10px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  border-left: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: left;
+    padding: 10px 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 [dir="rtl"] .feature-list-item .label {
   text-align: right;
 }
 
 .feature-list-item .label .icon {
-  opacity: 0.5;
+    opacity: 0.75;
 }
 .feature-list-item .close {
   float: right;
@@ -1258,9 +1375,8 @@ a.hide-toggle {
   color: #597be7;
 }
 .feature-list-item .entity-name {
-  font-weight: normal;
-  color: #666;
-  padding-left: 10px;
+    font-weight: normal;
+    padding-left: 10px;
 }
 [dir="rtl"] .feature-list-item .entity-name {
   padding-left: 0;
@@ -4848,15 +4964,6 @@ img.tile-debug {
 
 .modal-section:last-child {
   border-bottom: 0;
-}
-
-/* Restore Modal
-------------------------------------------------------- */
-.modal-actions .logo-restore {
-  color: #7092ff;
-}
-.modal-actions .logo-reset {
-  color: #e06c5e;
 }
 
 /* Success Screen / Community Index

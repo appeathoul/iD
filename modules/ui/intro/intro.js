@@ -91,7 +91,7 @@ export function uiIntro(context) {
         if (imagery) {
             context.background().baseLayerSource(imagery);
         } else {
-            context.background().bing();
+            context.background().tianditu();
         }
         overlays.forEach(function(d) {
             context.background().toggleOverlayLayer(d);
