@@ -100,7 +100,7 @@
   top: 0px;
   right: 0px;
   height: 100%;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .header-user-tool {
@@ -211,4 +211,45 @@
   color: #23374d;
   display: block;
   width: 100%;
+}
+
+.detail-panel {
+  position: absolute;
+  right: 4px;
+  top: 50px;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 0 3px 3px;
+  *border-right-width: 2px;
+  *border-bottom-width: 2px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  background-clip: padding-box;
+}
+
+.detail-panel ul {
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 0;
+  list-style: none;
+}
+
+.detail-panel li {
+  list-style: none;
+}
+
+.detail-panel li > a {
+  display: block;
+  padding: 3px 10px;
+  clear: both;
+  font-weight: normal;
+  line-height: 20px;
+  color: #333333;
+  white-space: nowrap;
+}
+
+.detail-panel li > a:hover,
+.detail-panel li > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #7ebc6f;
 }

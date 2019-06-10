@@ -2,6 +2,7 @@ import _throttle from 'lodash-es/throttle';
 import _debounce from 'lodash-es/debounce';
 
 import { drag as d3_drag } from 'd3-drag';
+import { easeLinear as d3_easeLinear } from 'd3-ease';
 import { svgIcon } from '../svg';
 import { tooltip } from '../util/tooltip.kelai';
 import { uiTooltipHeaderHtml } from './tooltipHeaderHtml';
@@ -15,8 +16,11 @@ import {
 } from 'd3-selection';
 
 export function uiHeader(context) {
+    var osm = context.connection();
     var wrap = d3_select(null),
         container = d3_select(null),
+        openMenu = false,
+        headerUser = d3_select(null),
         tools = [
             { id: 'help', icon: 'iD-icon-help' },
             { id: 'news', icon: 'iD-icon-top-news' },
@@ -25,6 +29,11 @@ export function uiHeader(context) {
         menus = [
             { id: 'edit', icon: 'iD-icon-top-edit', text: '实时编辑', select: true },
             { id: 'my', icon: 'iD-icon-top-my', text: '我的' }
+        ],
+        details = [
+            { id: 'info', text: '详情' },
+            { id: 'setting', text: '设置' },
+            { id: 'logout', text: '注销' }
         ];
     function header(selection) {
         wrap = selection;
@@ -33,12 +42,22 @@ export function uiHeader(context) {
     }
 
     // 打开详情页
-    header.openMenu = function () {
-
+    header.openMenu = function (selection) {
+        renderDetailPanel();
     };
 
     // 关闭详情页
-    header.closeMenu = function () { };
+    header.closeMenu = function (selection) {
+        selection.select('.detail-panel')
+            .transition()
+            .duration(250)
+            .ease(d3_easeLinear)
+            .style('opacity', 0)
+            .on('end', function (d) {
+                d3_select(this)
+                    .remove();
+            });
+    };
 
     // update
     function render(selection) {
@@ -78,7 +97,7 @@ export function uiHeader(context) {
         var headerTools = wrap
             .append('div')
             .attr('class', 'header-tools');
-        var headerUser = headerTools.selectAll('.header-user-tool')
+        headerUser = headerTools.selectAll('.header-user-tool')
             .data([0]);
         var headerUserEnter = headerUser.enter();
         var headerUserEnterTool = headerUserEnter.append('div')
@@ -86,7 +105,17 @@ export function uiHeader(context) {
         headerUserEnterTool.append('div')
             .attr('class', 'header-user-tool-avatar')
             .append('img')
-            .attr('src', defaultUserIcon);
+            .attr('src', defaultUserIcon)
+            .on('click', function (d) {
+                if (openMenu) {
+                    header.closeMenu(selection);
+                    openMenu = false;
+                } else {
+                    header.openMenu(selection);
+                    openMenu = true;
+                }
+            });
+
         var headerUserEnterToolWarpper = headerUserEnterTool.append('div')
             .attr('class', 'header-user-tool-wrapper');
         headerUser = headerUserEnter.merge(headerUser);
@@ -109,6 +138,38 @@ export function uiHeader(context) {
                 }
             });
         initMenu(headerTools);
+        update(selection);
+        if (openMenu) {
+            header.openMenu();
+        }
+    }
+
+    function renderDetailPanel() {
+        var detailPanel = headerUser
+            .append('div')
+            .attr('class', 'detail-panel')
+            .append('ul');
+        detailPanel.selectAll('li')
+            .data(details)
+            .enter()
+            .append('li')
+            .append('a')
+            .append('span')
+            .text(function (d) { return d.text; });
+    }
+
+    //  从服务器请求权限接口更新
+    function update(selection) {
+        osm.userDetails(function (err, details) {
+            var userAvatar = selection.select('.header-user-tool-avatar').select('img');
+            if (err) return;
+            var userUrl = osm.userURL(details.display_name),
+                userImgUrl = details.image_url,
+                userName = details.display_name;
+
+            // 设置用户头像
+            userAvatar.attr('src', userImgUrl);
+        });
     }
 
     // 初始化menu

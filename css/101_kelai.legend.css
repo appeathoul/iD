@@ -1,0 +1,39 @@
+.legend_wrapper {
+  position: absolute;
+  bottom: 24px;
+  right: 10px;
+  z-index: 5;
+  background: rgba(97, 97, 97, 0.54);
+  color: white;
+}
+
+.legend_wrapper .legend_wrapper_border {
+  padding: 3px 10px;
+}
+
+.legend_wrapper .legend_item {
+  cursor: pointer;
+}
+
+.legend_wrapper .legend_color {
+  height: 10px;
+  width: 10px;
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.legend_wrapper .legend_span {
+  overflow: hidden;
+  vertical-align: middle;
+}
+
+.legend_wrapper .legend_item.nochecked {
+  -webkit-filter: grayscale(80%);
+  -moz-filter: grayscale(80%);
+  -ms-filter: grayscale(80%);
+  -o-filter: grayscale(80%);
+
+  filter: grayscale(80%);
+  color: grey;
+}

@@ -33,6 +33,7 @@ import { uiScale } from './scale';
 import { uiShortcuts } from './shortcuts';
 import { uiHeader } from './header';
 import { uiLayers } from './layers/layers';
+import { uiLegend } from './legend/legend';
 import { uiToolbox } from './toolbox/toolbox';
 import { uiSidebar } from './sidebar';
 import { uiSpinner } from './spinner';
@@ -63,7 +64,7 @@ export function uiInit(context) {
         header
             .append('div')
             .attr('class', 'header-container_body')
-            .call(ui.header);
+            .call(uiHeader(context));
 
         layers
             .append('div')
@@ -138,7 +139,8 @@ export function uiInit(context) {
             overMap
                 .call(uiMapInMap(context))
                 .call(uiInfo(context))
-                .call(uiNotice(context));
+                .call(uiNotice(context))
+                .call(uiLegend(context));
 
 
             overMap
@@ -379,8 +381,6 @@ export function uiInit(context) {
             }
         });
     };
-
-    ui.header = uiHeader(context);
 
     ui.layers = uiLayers(context);
 
