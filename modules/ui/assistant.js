@@ -113,7 +113,17 @@ export function uiAssistant(context) {
         subjectTitle.classed('location', false);
         container.classed('prominent', false);
 
-        if (mode.id === 'add-point' || mode.id === 'add-line' || mode.id === 'add-area') {
+        if (mode.id === 'save') {
+
+            var summary = context.history().difference().summary();
+
+            modeLabel.text(t('assistant.mode.saving'));
+            iconUse.attr('href','#iD-icon-save');
+
+            var titleID = summary.length === 1 ? 'change' : 'changes';
+            subjectTitle.text(t('commit.' + titleID, { count: summary.length }));
+
+        } else if (mode.id === 'add-point' || mode.id === 'add-line' || mode.id === 'add-area') {
 
             modeLabel.text(t('assistant.mode.adding'));
 
@@ -167,6 +177,14 @@ export function uiAssistant(context) {
                         updateDidEditStatus();
                         context.container().call(uiIntro(context));
                     });
+
+                mainFooter.append('button')
+                    .attr('class', 'primary')
+                    .on('click', function() {
+                        updateDidEditStatus();
+                    })
+                    .append('span')
+                    .text(t('assistant.welcome.start_mapping'));
             }
 
         } else {

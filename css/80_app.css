@@ -359,9 +359,16 @@ button.secondary {
     background: transparent;
     border: 1px solid #7092ff;
 }
+button.primary:hover,
+button.secondary:hover {
+    background: #88a4ff;
+}
+button.primary:active,
+button.secondary:active {
+    background: #597be7;
+}
 button.secondary:hover {
     color: #fff;
-    background: #7092ff;
 }
 button.destructive {
     background: #d32232;
@@ -1095,7 +1102,7 @@ a.hide-toggle {
 .assistant .main-footer button {
     min-width: 100px;
     height: auto;
-    padding: 5px 2px;
+    padding: 5px 10px;
     line-height: 20px;
     font-size: 13px;
 }
@@ -1162,7 +1169,6 @@ a.hide-toggle {
 }
 
 .assistant .geocode-item {
-    width: 50%;
     margin-top: 5px;
     margin-right: auto;
     margin-left: auto;

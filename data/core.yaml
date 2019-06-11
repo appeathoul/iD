@@ -36,6 +36,7 @@ en:
       drawing: Drawing
       mapping: Mapping
       editing: Editing
+      saving: Saving
     instructions:
       add_point: Click or tap the center of the feature.
       add_line: Click or tap the starting location.
@@ -52,6 +53,7 @@ en:
     welcome:
       first_time: "You’re editing <b>OpenStreetMap</b>: the free, collborative world map.<br/>If this is your first time here, consider taking the <a>quick-start tutorial</a>.<br/>Thanks for contributing. Have fun!"
       return: "Welcome back. Ready to make the map even better?"
+      start_mapping: Start Mapping
     restore:
       title: Restore
       discard: Discard
@@ -460,6 +462,7 @@ en:
     request_review: "I would like someone to review my edits."
     save: Upload
     cancel: Cancel
+    change: "1 Change"
     changes: "{count} Changes"
     download_changes: Download osmChange file
     errors: Errors
@@ -537,7 +540,6 @@ en:
     note: note
   geocoder:
     search: Search worldwide...
-    no_results_visible: No results in visible map area
     no_results_worldwide: No results found
   geolocate:
     title: Show My Location
@@ -1481,6 +1483,9 @@ en:
       incomplete:
         message: "{feature} has incomplete tags"
         reference: "Some features should have additional tags."
+      noncanonical_brand:
+        message: "{feature} looks like a brand with nonstandard tags"
+        reference: "All features of the same brand should be tagged the same way."
     private_data:
       title: Private Information
       tip: "Find features that may contain private information"
