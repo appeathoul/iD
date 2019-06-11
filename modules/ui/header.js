@@ -32,7 +32,7 @@ export function uiHeader(context) {
         ],
         details = [
             { id: 'info', text: '详情' },
-            { id: 'setting', text: '设置' },
+            { id: 'setting', text: '设置', },
             { id: 'logout', text: '注销' }
         ];
     function header(selection) {
@@ -149,12 +149,27 @@ export function uiHeader(context) {
             .append('div')
             .attr('class', 'detail-panel')
             .append('ul');
-        detailPanel.selectAll('li')
+        var enter = detailPanel.selectAll('li')
             .data(details)
             .enter()
-            .append('li')
-            .append('a')
-            .append('span')
+            .append('li');
+        enter.on('click', function (d) {
+            if (d.id === 'logout') {
+                d3_event.preventDefault();
+                osm.logout();
+                window.location.reload();
+            } else {
+                d3_event.preventDefault();
+                return false;
+            }
+        });
+        enter.append('a').call(function (selection) {
+            selection.each(function (d) {
+                if (d.href) {
+                    d3_select(this).attr('href', d.href);
+                }
+            });
+        }).append('span')
             .text(function (d) { return d.text; });
     }
 
