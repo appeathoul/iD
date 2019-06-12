@@ -10,6 +10,7 @@ import serviceOsmWikibase from './osm_wikibase';
 import serviceStreetside from './streetside';
 import serviceTaginfo from './taginfo';
 import serviceVectorTile from './vector_tile';
+import serviceVectorTileOsm from './vector_tile_osm';
 import serviceWikidata from './wikidata';
 import serviceWikipedia from './wikipedia';
 
@@ -27,6 +28,7 @@ export var services = {
     streetside: serviceStreetside,
     taginfo: serviceTaginfo,
     vectorTile: serviceVectorTile,
+    vectorTileOsm: serviceVectorTileOsm,
     wikidata: serviceWikidata,
     wikipedia: serviceWikipedia
 };
