@@ -143,6 +143,7 @@ export function rendererMap(context) {
                             value: conditionSplitValue
                         };
                     }
+                    context.enter(modeBrowse(context));
                     context.minEditableZoom(e.editlevel);
                     context.features().disableAll();
                     context.features().enable(e.key);
