@@ -1,5 +1,7 @@
+/* eslint-disable radix */
 import _map from 'lodash-es/map';
 import _forEach from 'lodash-es/forEach';
+import _sortBy from 'lodash-es/sortBy';
 
 export function osmBakcground() {
     if (!(this instanceof osmBakcground)) {
@@ -17,6 +19,11 @@ Object.assign(osmBakcground.prototype, {
         _forEach(backgrounds[0], function (value, index) {
             that.setBackground(value);
         });
+
+        this.backgrounds = _sortBy(this.backgrounds, function (o) {
+            return o.order;
+        });
+
     },
     setBackground: function (_bac) {
         var attributes = _bac.attributes;
@@ -36,7 +43,8 @@ Object.assign(osmBakcground.prototype, {
             terms_url: attributes.terms_url.value,
             terms_text: attributes.terms_text.value,
             description: attributes.description.value,
-            polygon: attributes.polygon.value
+            polygon: attributes.polygon.value,
+            order: attributes.order.value
         };
         // 去除空字段
         _map(json, function (value, index) {

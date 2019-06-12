@@ -16,7 +16,7 @@ import co from 'co';
 var tiler = utilTiler();
 var dispatch = d3_dispatch('authLoading', 'authDone');
 // 配置的远程服务地址
-var urlroot = 'http://192.168.3.61:3000';
+var urlroot = 'http://192.168.3.101:3000';
 // osm服务权限认证
 var oauth = osmAuth({
     url: urlroot,

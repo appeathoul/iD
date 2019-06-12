@@ -14,7 +14,7 @@ import { utilArrayChunk, utilArrayGroupBy, utilArrayUniq, utilRebind, utilTiler,
 
 var tiler = utilTiler();
 var dispatch = d3_dispatch('authLoading', 'authDone', 'change', 'loading', 'loaded', 'loadedNotes');
-var urlroot = 'http://192.168.3.61:3000';
+var urlroot = 'http://192.168.3.101:3000';
 var oauth = osmAuth({
     url: urlroot,
     oauth_consumer_key: 'SWFGlfmQcEdOyOzG3STbO9I90gjMFLqkCX5MCOop',
