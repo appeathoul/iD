@@ -32,7 +32,7 @@ export function uiHeader(context) {
         ],
         details = [
             { id: 'info', text: '详情' },
-            { id: 'setting', text: '设置', },
+            { id: 'setting', text: '设置' },
             { id: 'logout', text: '注销' }
         ];
     function header(selection) {
@@ -159,29 +159,32 @@ export function uiHeader(context) {
                 osm.logout();
                 window.location.reload();
             } else {
-                d3_event.preventDefault();
-                return false;
+                // d3_event.preventDefault();
+                // return false;
             }
         });
-        enter.append('a').call(function (selection) {
-            selection.each(function (d) {
-                if (d.href) {
-                    d3_select(this).attr('href', d.href);
-                }
-            });
-        }).append('span')
+        enter.append('a')
+            .attr('target', '_Blank').call(function (selection) {
+                selection.each(function (d) {
+                    if (d.href) {
+                        d3_select(this).attr('href', d.href);
+                    }
+                });
+            }).append('span')
             .text(function (d) { return d.text; });
     }
 
     //  从服务器请求权限接口更新
     function update(selection) {
-        osm.userDetails(function (err, details) {
+        osm.userDetails(function (err, _details) {
             var userAvatar = selection.select('.header-user-tool-avatar').select('img');
             if (err) return;
-            var userUrl = osm.userURL(details.display_name),
-                userImgUrl = details.image_url,
-                userName = details.display_name;
+            var userUrl = osm.userURL(_details.display_name),
+                userImgUrl = _details.image_url,
+                userName = _details.display_name;
 
+            details[0].href = userUrl;
+            details[1].href = userUrl + '/account';
             // 设置用户头像
             userAvatar.attr('src', userImgUrl);
         });
